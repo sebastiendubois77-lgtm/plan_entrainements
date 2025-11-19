@@ -51,11 +51,8 @@ export default function AthleteList({ athletes = [], coachId, onRefresh }: Props
       if (onRefresh) onRefresh();
       // Temporarily show invite link (TODO: send by email)
       if (data.message === 'invite_created' && data.inviteLink) {
-        const copyLink = confirm('Athlète créé ! Voulez-vous copier le lien d\'invitation dans le presse-papier ?\n\nLe lien est valide pendant 7 jours.');
-        if (copyLink) {
-          navigator.clipboard.writeText(data.inviteLink);
-          alert('Lien copié ! Envoyez-le à l\'athlète par email ou message.');
-        }
+        await navigator.clipboard.writeText(data.inviteLink);
+        alert(`Athlète créé ! Le lien d'invitation a été copié dans le presse-papier.\n\nEnvoyez-le à l'athlète :\n\n${data.inviteLink}\n\nLe lien est valide pendant 7 jours.`);
       }
     } catch (err: any) {
       setLoading(false);

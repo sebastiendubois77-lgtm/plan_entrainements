@@ -51,8 +51,8 @@ export async function POST(req: Request) {
       const inviteToken = crypto.randomBytes(32).toString('hex');
       const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
       
-      const profilesUrl = SUPABASE_URL.replace(/\/+$/, '') + '/rest/v1/invitation_tokens';
-      await fetch(profilesUrl, {
+      const tokensUrl = SUPABASE_URL.replace(/\/+$/, '') + '/rest/v1/invitation_tokens';
+      await fetch(tokensUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
