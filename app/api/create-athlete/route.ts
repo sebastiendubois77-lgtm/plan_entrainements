@@ -49,7 +49,7 @@ export async function POST(req: Request) {
     if (patchRes.ok && Array.isArray(patched) && patched.length > 0) {
       // trigger password recovery email so the athlete sets their password
       const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-      const productionUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plan-entrainements-bs08uwdeg-sebastien-dubois-projects.vercel.app';
+      const productionUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plan-entrainements.vercel.app';
       if (anonKey) {
         await fetch(SUPABASE_URL.replace(/\/+$/, '') + '/auth/v1/recover', {
           method: 'POST',
@@ -76,7 +76,7 @@ export async function POST(req: Request) {
 
     // trigger password recovery email so the athlete sets their password
     const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-    const productionUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plan-entrainements-bs08uwdeg-sebastien-dubois-projects.vercel.app';
+    const productionUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plan-entrainements.vercel.app';
     if (anonKey) {
       await fetch(SUPABASE_URL.replace(/\/+$/, '') + '/auth/v1/recover', {
         method: 'POST',
