@@ -18,13 +18,22 @@ export default function AthleteList({ athletes = [], coachId, onRefresh }: Props
     e.preventDefault();
     if (!name || !email) return alert('Nom et email requis');
     setLoading(true);
-    const payload: any = { full_name: name, email, role: 'athlete', sport };
-    if (coachId) payload.coach_user_id = coachId;
-    const { error } = await supabase.from('profiles').insert([payload]);
-    setLoading(false);
-    if (error) return alert(error.message);
-    setName(''); setEmail(''); setSport('');
-    if (onRefresh) onRefresh();
+    try {
+      const res = await fetch('/api/create-athlete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, sport, coachId })
+      });
+      const data = await res.json();
+      setLoading(false);
+      if (!res.ok) return alert('Erreur: ' + JSON.stringify(data));
+      setName(''); setEmail(''); setSport('');
+      if (onRefresh) onRefresh();
+      if (data.password) alert(`Athlète créé. Mot de passe temporaire: ${data.password}`);
+    } catch (err: any) {
+      setLoading(false);
+      alert('Erreur: ' + (err.message || String(err)));
+    }
   }
 
   return (
