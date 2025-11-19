@@ -3,4 +3,5 @@
 @tailwind utilities;
 
 html, body, #__next { height: 100%; }
-body { @apply bg-slate-50 text-slate-800; }
+/* Use direct colors to avoid @apply issues during build */
+body { background-color: #f8fafc; color: #1f2937; }
