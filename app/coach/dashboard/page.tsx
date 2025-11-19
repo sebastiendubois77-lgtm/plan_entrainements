@@ -11,9 +11,18 @@ export default function CoachDashboard() {
       const { data: u } = await supabase.auth.getUser();
       const user = u.user;
       if (!user) return;
-      // fetch athletes where coach_id = user.id
-      const { data, error } = await supabase.from('athletes').select('*').eq('coach_id', user.id);
-      if (!error) setAthletes(data || []);
+      // fetch athlete profiles where coach_user_id = user.id (or role = 'athlete')
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('id,full_name,sport')
+        .eq('role', 'athlete')
+        .eq('coach_user_id', user.id);
+      if (!error && data) {
+        // map to shape expected by AthleteList
+        setAthletes(
+          data.map((p: any) => ({ id: p.id, name: p.full_name || p.email || 'Athlète', sport: p.sport }))
+        );
+      }
     })();
   }, []);
   return (
