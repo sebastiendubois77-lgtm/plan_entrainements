@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { supabase } from '../../lib/supabaseClient';
 
 type Props = {
-  athletes: any[];
+  athletes: Array<{ id: string; name: string; email?: string }>;
   coachId?: string | null;
   onRefresh?: () => void;
 };
@@ -54,7 +54,7 @@ export default function AthleteList({ athletes = [], coachId, onRefresh }: Props
             <div className="flex justify-between">
               <div>
                 <div className="font-semibold">{a.name}</div>
-                <div className="text-sm text-gray-500">{a.sport}</div>
+                {a.email && <div className="text-sm text-gray-500">{a.email}</div>}
               </div>
             </div>
           </li>

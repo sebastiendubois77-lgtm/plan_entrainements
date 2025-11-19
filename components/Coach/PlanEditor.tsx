@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabaseClient';
 
 type Props = {
-  athletes?: Array<{ id: string; name: string; sport?: string }>;
+  athletes?: Array<{ id: string; name: string }>;
   onCreated?: () => void;
 };
 
@@ -34,7 +34,7 @@ export default function PlanEditor({ athletes = [], onCreated }: Props) {
         <select className="w-full p-2 border rounded" value={athleteId} onChange={e=>setAthleteId(e.target.value)}>
           <option value="">-- Choisir un athlète --</option>
           {athletes.map(a => (
-            <option key={a.id} value={a.id}>{a.name} {a.sport ? `— ${a.sport}` : ''}</option>
+            <option key={a.id} value={a.id}>{a.name}</option>
           ))}
         </select>
       </div>

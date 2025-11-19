@@ -3,7 +3,6 @@ import { NextResponse } from 'next/server';
 type Body = {
   name: string;
   email: string;
-  sport?: string;
   coachId?: string | null;
   password?: string;
 };
@@ -11,7 +10,7 @@ type Body = {
 export async function POST(req: Request) {
   try {
     const body: Body = await req.json();
-    const { name, email, sport, coachId } = body;
+    const { name, email, coachId } = body;
     // we will not return or expose any password; instead we will trigger a password recovery
     // so the athlete can set their password securely at first login
     let password = body.password || Math.random().toString(36).slice(-12);
@@ -44,17 +43,18 @@ export async function POST(req: Request) {
         'Authorization': `Bearer ${SERVICE_KEY}`,
         'Prefer': 'return=representation'
       },
-      body: JSON.stringify({ auth_uid: userId, full_name: name, role: 'athlete', sport: sport || null, coach_user_id: coachId || null })
+      body: JSON.stringify({ auth_uid: userId, full_name: name, role: 'athlete', coach_user_id: coachId || null })
     });
     const patched = await patchRes.json();
     if (patchRes.ok && Array.isArray(patched) && patched.length > 0) {
       // trigger password recovery email so the athlete sets their password
       const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+      const productionUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plan-entrainements-bs08uwdeg-sebastien-dubois-projects.vercel.app';
       if (anonKey) {
         await fetch(SUPABASE_URL.replace(/\/+$/, '') + '/auth/v1/recover', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'apikey': anonKey },
-          body: JSON.stringify({ email })
+          body: JSON.stringify({ email, options: { redirectTo: productionUrl } })
         });
       }
       return NextResponse.json({ userId, profile: patched[0], message: 'reset_email_sent' });
@@ -69,18 +69,19 @@ export async function POST(req: Request) {
         'Authorization': `Bearer ${SERVICE_KEY}`,
         'Prefer': 'return=representation'
       },
-      body: JSON.stringify({ auth_uid: userId, full_name: name, email, role: 'athlete', sport: sport || null, coach_user_id: coachId || null })
+      body: JSON.stringify({ auth_uid: userId, full_name: name, email, role: 'athlete', coach_user_id: coachId || null })
     });
     const inserted = await insertRes.json();
     if (!insertRes.ok) return NextResponse.json({ error: inserted }, { status: 500 });
 
     // trigger password recovery email so the athlete sets their password
     const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    const productionUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plan-entrainements-bs08uwdeg-sebastien-dubois-projects.vercel.app';
     if (anonKey) {
       await fetch(SUPABASE_URL.replace(/\/+$/, '') + '/auth/v1/recover', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'apikey': anonKey },
-        body: JSON.stringify({ email })
+        body: JSON.stringify({ email, options: { redirectTo: productionUrl } })
       });
     }
 
