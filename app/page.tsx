@@ -21,9 +21,12 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white pt-8">
       <div className="w-full max-w-2xl mx-auto p-8 text-center">
-        <div>
-          <h1 className="text-4xl font-extrabold">Les plans de Seb</h1>
-          <p className="text-lg text-slate-600 mt-1">Gérez vos plans d'entraînement simplement</p>
+        <div className="flex items-center justify-center gap-4">
+          <img src="/logo.svg" alt="Les plans de Seb" className="w-16 h-16 object-contain" />
+          <div>
+            <h1 className="text-4xl font-extrabold">Les plans de Seb</h1>
+            <p className="text-lg text-slate-600 mt-1">Gérez vos plans d'entraînement simplement</p>
+          </div>
         </div>
 
         <div className="mt-8 bg-white rounded-lg shadow-md p-6 mx-auto" style={{maxWidth: '20rem'}}>

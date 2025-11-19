@@ -23,11 +23,7 @@ export default function Header() {
 
   return (
     <header className="bg-white shadow-sm">
-      <div className="max-w-5xl mx-auto flex items-center justify-start p-4">
-        <Link href="/">
-          <img src="/logo.svg" alt="logo" className="w-14 h-14 object-contain ml-2" />
-        </Link>
-      </div>
+      <div className="max-w-5xl mx-auto p-4" />
     </header>
   );
 }
