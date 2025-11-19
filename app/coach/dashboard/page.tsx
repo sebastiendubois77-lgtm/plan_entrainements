@@ -16,13 +16,13 @@ export default function CoachDashboard() {
     // fetch athlete profiles where coach_user_id = user.id (or role = 'athlete')
     const { data, error } = await supabase
       .from('profiles')
-      .select('id,full_name,sport,email')
+      .select('id,full_name,email')
       .eq('role', 'athlete')
       .eq('coach_user_id', user.id);
     if (!error && data) {
       // map to shape expected by AthleteList
       setAthletes(
-        data.map((p: any) => ({ id: p.id, name: p.full_name || p.email || 'Athlète', sport: p.sport }))
+        data.map((p: any) => ({ id: p.id, name: p.full_name || p.email || 'Athlète' }))
       );
     }
   }
@@ -30,7 +30,7 @@ export default function CoachDashboard() {
   useEffect(() => {
     fetchAthletes();
   }, []);
-  const [selected, setSelected] = React.useState<string | null>(null);
+  const [selected, setSelected] = useState<string | null>(null);
 
   return (
     <div className="mt-6">
