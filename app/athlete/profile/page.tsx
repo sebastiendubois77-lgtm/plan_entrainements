@@ -15,6 +15,7 @@ export default function AthleteProfile() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [profile, setProfile] = useState<any>(null);
   
   const [photoUrl, setPhotoUrl] = useState('');
@@ -80,6 +81,46 @@ export default function AthleteProfile() {
     setCourses(courses.filter((_, i) => i !== index));
   }
 
+  async function handlePhotoUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      alert('Veuillez sélectionner une image');
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert('La taille maximale est de 5 Mo');
+      return;
+    }
+
+    setUploading(true);
+
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${profile.id}-${Date.now()}.${fileExt}`;
+      const filePath = `avatars/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, file, { upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(filePath);
+
+      setPhotoUrl(publicUrl);
+      alert('Photo téléchargée avec succès !');
+    } catch (error: any) {
+      alert('Erreur lors du téléchargement: ' + error.message);
+    } finally {
+      setUploading(false);
+    }
+  }
+
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true);
@@ -122,17 +163,24 @@ export default function AthleteProfile() {
       <form onSubmit={handleSave} className="space-y-6">
         {/* Photo */}
         <div>
-          <label className="block text-sm font-medium mb-2">Photo de profil (URL)</label>
-          <input
-            type="url"
-            value={photoUrl}
-            onChange={e => setPhotoUrl(e.target.value)}
-            className="w-full p-2 border rounded"
-            placeholder="https://exemple.com/photo.jpg"
-          />
-          {photoUrl && (
-            <img src={photoUrl} alt="Aperçu" className="mt-2 w-24 h-24 object-cover rounded-full" />
-          )}
+          <label className="block text-sm font-medium mb-2">Photo de profil</label>
+          <div className="flex items-center gap-4">
+            {photoUrl && (
+              <img src={photoUrl} alt="Photo de profil" className="w-24 h-24 object-cover rounded-full" />
+            )}
+            <div className="flex-1">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handlePhotoUpload}
+                disabled={uploading}
+                className="w-full p-2 border rounded"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                {uploading ? 'Téléchargement en cours...' : 'Maximum 5 Mo • JPG, PNG, GIF'}
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Date de naissance */}
