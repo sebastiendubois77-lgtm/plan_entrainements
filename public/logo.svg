@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="320" height="320">
+  <defs>
+    <style> .s{fill:#0b5bbd} .r{fill:#e13a2d} </style>
+  </defs>
+  <circle cx="86" cy="18" r="10" class="s"/>
+  <path d="M24 78c10-14 36-28 54-24 0 0-18 12-18 22-16 0-28 6-36 12-4-6-4-10-0-10z" class="s" />
+  <path d="M32 42c12-6 28-10 44-6 0 0-22 6-30 18-8-2-18-8-14-12z" class="r" />
+</svg>

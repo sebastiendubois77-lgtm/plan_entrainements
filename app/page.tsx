@@ -22,8 +22,8 @@ export default function Home() {
     <div className="min-h-screen flex items-center justify-center bg-white">
       <div className="w-full max-w-3xl mx-auto p-8">
         <div className="flex items-center gap-8">
-          <div className="flex-shrink-0">
-            <img src="/logo.png" alt="Les plans de Seb" className="w-28 h-28 object-contain" />
+            <div className="flex-shrink-0">
+            <img src="/logo.svg" alt="Les plans de Seb" className="w-28 h-28 object-contain" />
           </div>
 
           <div>
