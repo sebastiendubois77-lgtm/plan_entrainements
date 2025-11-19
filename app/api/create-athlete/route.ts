@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import crypto from 'crypto';
 
 type Body = {
   name: string;
@@ -11,9 +12,8 @@ export async function POST(req: Request) {
   try {
     const body: Body = await req.json();
     const { name, email, coachId } = body;
-    // we will not return or expose any password; instead we will trigger a password recovery
-    // so the athlete can set their password securely at first login
-    let password = body.password || Math.random().toString(36).slice(-12);
+    // Generate a temporary password that will be replaced when athlete sets their own
+    let password = crypto.randomBytes(16).toString('hex');
 
     const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -47,17 +47,31 @@ export async function POST(req: Request) {
     });
     const patched = await patchRes.json();
     if (patchRes.ok && Array.isArray(patched) && patched.length > 0) {
-      // trigger password recovery email so the athlete sets their password
-      const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+      // Create invitation token (valid for 7 days)
+      const inviteToken = crypto.randomBytes(32).toString('hex');
+      const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+      
+      const profilesUrl = SUPABASE_URL.replace(/\/+$/, '') + '/rest/v1/invitation_tokens';
+      await fetch(profilesUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SERVICE_KEY,
+          'Authorization': `Bearer ${SERVICE_KEY}`,
+        },
+        body: JSON.stringify({ email, token: inviteToken, expires_at: expiresAt })
+      });
+
       const productionUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plan-entrainements.vercel.app';
-      if (anonKey) {
-        await fetch(SUPABASE_URL.replace(/\/+$/, '') + '/auth/v1/recover', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'apikey': anonKey },
-          body: JSON.stringify({ email, options: { redirectTo: `${productionUrl}/auth/callback` } })
-        });
-      }
-      return NextResponse.json({ userId, profile: patched[0], message: 'reset_email_sent' });
+      const inviteLink = `${productionUrl}/auth/set-password?token=${inviteToken}`;
+      
+      // TODO: Send email with invite link (for now return it in response)
+      return NextResponse.json({ 
+        userId, 
+        profile: patched[0], 
+        message: 'invite_created',
+        inviteLink // Temporary: should be sent by email
+      });
     }
 
     // Otherwise insert a new profile
@@ -74,18 +88,31 @@ export async function POST(req: Request) {
     const inserted = await insertRes.json();
     if (!insertRes.ok) return NextResponse.json({ error: inserted }, { status: 500 });
 
-    // trigger password recovery email so the athlete sets their password
-    const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-    const productionUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plan-entrainements.vercel.app';
-    if (anonKey) {
-      await fetch(SUPABASE_URL.replace(/\/+$/, '') + '/auth/v1/recover', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'apikey': anonKey },
-        body: JSON.stringify({ email, options: { redirectTo: `${productionUrl}/auth/callback` } })
-      });
-    }
+    // Create invitation token (valid for 7 days)
+    const inviteToken = crypto.randomBytes(32).toString('hex');
+    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+    
+    const tokensUrl = SUPABASE_URL.replace(/\/+$/, '') + '/rest/v1/invitation_tokens';
+    await fetch(tokensUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SERVICE_KEY,
+        'Authorization': `Bearer ${SERVICE_KEY}`,
+      },
+      body: JSON.stringify({ email, token: inviteToken, expires_at: expiresAt })
+    });
 
-    return NextResponse.json({ userId, profile: inserted[0], message: 'reset_email_sent' });
+    const productionUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plan-entrainements.vercel.app';
+    const inviteLink = `${productionUrl}/auth/set-password?token=${inviteToken}`;
+    
+    // TODO: Send email with invite link (for now return it in response)
+    return NextResponse.json({ 
+      userId, 
+      profile: inserted[0], 
+      message: 'invite_created',
+      inviteLink // Temporary: should be sent by email
+    });
   } catch (err: any) {
     return NextResponse.json({ error: err.message || String(err) }, { status: 500 });
   }

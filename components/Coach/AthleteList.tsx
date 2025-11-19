@@ -49,8 +49,14 @@ export default function AthleteList({ athletes = [], coachId, onRefresh }: Props
       if (!res.ok) return alert('Erreur: ' + JSON.stringify(data));
       setName(''); setEmail('');
       if (onRefresh) onRefresh();
-      // inform the coach that an email was sent so the athlete can set their password
-      if (data.message === 'reset_email_sent') alert('Athlète créé. Un e-mail a été envoyé pour définir le mot de passe.');
+      // Temporarily show invite link (TODO: send by email)
+      if (data.message === 'invite_created' && data.inviteLink) {
+        const copyLink = confirm('Athlète créé ! Voulez-vous copier le lien d\'invitation dans le presse-papier ?\n\nLe lien est valide pendant 7 jours.');
+        if (copyLink) {
+          navigator.clipboard.writeText(data.inviteLink);
+          alert('Lien copié ! Envoyez-le à l\'athlète par email ou message.');
+        }
+      }
     } catch (err: any) {
       setLoading(false);
       alert('Erreur: ' + (err.message || String(err)));

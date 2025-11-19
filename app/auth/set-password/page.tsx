@@ -1,0 +1,208 @@
+'use client';
+import { Suspense, useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { supabase } from '../../../lib/supabaseClient';
+
+function SetPasswordContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const token = searchParams.get('token');
+  
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [validatingToken, setValidatingToken] = useState(true);
+  const [tokenData, setTokenData] = useState<{ email: string } | null>(null);
+
+  useEffect(() => {
+    if (!token) {
+      setError('Token manquant');
+      setValidatingToken(false);
+      return;
+    }
+    
+    // Validate token
+    validateToken();
+  }, [token]);
+
+  async function validateToken() {
+    try {
+      const res = await fetch(`/api/validate-invite-token?token=${token}`);
+      const data = await res.json();
+      
+      if (!res.ok) {
+        setError(data.error || 'Token invalide ou expiré');
+        setValidatingToken(false);
+        return;
+      }
+      
+      setTokenData({ email: data.email });
+      setValidatingToken(false);
+    } catch (err) {
+      setError('Erreur de validation du token');
+      setValidatingToken(false);
+    }
+  }
+
+  async function handleSetPassword(e: React.FormEvent) {
+    e.preventDefault();
+    setError('');
+    
+    if (password !== confirmPassword) {
+      setError('Les mots de passe ne correspondent pas');
+      return;
+    }
+    
+    if (password.length < 6) {
+      setError('Le mot de passe doit contenir au moins 6 caractères');
+      return;
+    }
+
+    if (!token || !tokenData) {
+      setError('Session invalide');
+      return;
+    }
+
+    setLoading(true);
+    
+    try {
+      // Call API to set password and mark token as used
+      const res = await fetch('/api/set-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token, password })
+      });
+      
+      const data = await res.json();
+      
+      if (!res.ok) {
+        setError(data.error || 'Erreur lors de la définition du mot de passe');
+        setLoading(false);
+        return;
+      }
+
+      // Sign in with new password
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: tokenData.email,
+        password
+      });
+
+      if (signInError) {
+        setError('Mot de passe défini, mais erreur de connexion: ' + signInError.message);
+        setLoading(false);
+        return;
+      }
+
+      // Redirect to athlete dashboard
+      router.push('/athlete/dashboard');
+    } catch (err: any) {
+      setError('Erreur: ' + (err.message || String(err)));
+      setLoading(false);
+    }
+  }
+
+  if (validatingToken) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p>Validation du lien...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error && !tokenData) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-lg shadow">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-red-600">Erreur</h2>
+            <p className="mt-4 text-gray-700">{error}</p>
+            <a href="/" className="mt-6 inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+              Retour à l'accueil
+            </a>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-lg shadow">
+        <div>
+          <h2 className="text-center text-3xl font-bold">Définir votre mot de passe</h2>
+          <p className="mt-2 text-center text-sm text-gray-600">
+            Bienvenue ! Choisissez un mot de passe pour accéder aux plans de Seb
+          </p>
+          {tokenData && (
+            <p className="mt-2 text-center text-xs text-gray-500">
+              Compte: {tokenData.email}
+            </p>
+          )}
+        </div>
+        
+        <form onSubmit={handleSetPassword} className="mt-8 space-y-6">
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+              {error}
+            </div>
+          )}
+          
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              Nouveau mot de passe
+            </label>
+            <input
+              id="password"
+              type="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Au moins 6 caractères"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-700">
+              Confirmer le mot de passe
+            </label>
+            <input
+              id="confirm-password"
+              type="password"
+              required
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Retapez votre mot de passe"
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-gray-400"
+          >
+            {loading ? 'Enregistrement...' : 'Définir le mot de passe et se connecter'}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+export default function SetPassword() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p>Chargement...</p>
+        </div>
+      </div>
+    }>
+      <SetPasswordContent />
+    </Suspense>
+  );
+}
