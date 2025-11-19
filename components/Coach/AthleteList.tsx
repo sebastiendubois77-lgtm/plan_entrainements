@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 
-export default function AthleteList({ athletes = [] }: { athletes: any[] }) {
+export default function AthleteList({ athletes = [], onRefresh }: { athletes: any[]; onRefresh?: () => void }) {
   return (
     <ul>
       {athletes.length === 0 && <li>Aucun athlète</li>}
