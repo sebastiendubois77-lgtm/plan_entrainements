@@ -18,6 +18,23 @@ function AuthCallbackContent() {
     const hash = window.location.hash;
     const isRecoveryFromHash = hash.includes('type=recovery') || hash.includes('type=magiclink');
     
+    // Check for errors in hash
+    const errorMatch = hash.match(/error=([^&]+)/);
+    const errorDescMatch = hash.match(/error_description=([^&]+)/);
+    
+    if (errorMatch) {
+      const errorCode = errorMatch[1];
+      const errorDesc = errorDescMatch ? decodeURIComponent(errorDescMatch[1].replace(/\+/g, ' ')) : '';
+      
+      if (errorCode === 'access_denied' && hash.includes('otp_expired')) {
+        setError('Le lien a expiré. Veuillez demander un nouveau lien à votre coach.');
+        return;
+      } else {
+        setError(`Erreur: ${errorDesc || errorCode}`);
+        return;
+      }
+    }
+    
     if (typeFromQuery === 'recovery' || isRecoveryFromHash) {
       setIsRecovery(true);
     } else {
@@ -87,6 +104,22 @@ function AuthCallbackContent() {
         router.push('/athlete/dashboard');
       }
     }
+  }
+
+  if (error && !isRecovery) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-lg shadow">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-red-600">Erreur</h2>
+            <p className="mt-4 text-gray-700">{error}</p>
+            <a href="/" className="mt-6 inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+              Retour à l'accueil
+            </a>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (!isRecovery) {

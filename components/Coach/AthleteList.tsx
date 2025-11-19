@@ -13,6 +13,26 @@ export default function AthleteList({ athletes = [], coachId, onRefresh }: Props
   const [email, setEmail] = useState('');
   // sport removed: plans are running-only
   const [loading, setLoading] = useState(false);
+  const [resendingEmail, setResendingEmail] = useState<string | null>(null);
+
+  async function handleResendInvite(athleteEmail: string) {
+    if (!confirm(`Renvoyer l'email d'invitation à ${athleteEmail} ?`)) return;
+    setResendingEmail(athleteEmail);
+    try {
+      const res = await fetch('/api/resend-invite', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: athleteEmail })
+      });
+      const data = await res.json();
+      setResendingEmail(null);
+      if (!res.ok) return alert('Erreur: ' + JSON.stringify(data));
+      alert('Email renvoyé avec succès');
+    } catch (err: any) {
+      setResendingEmail(null);
+      alert('Erreur: ' + (err.message || String(err)));
+    }
+  }
 
   async function handleAdd(e: React.FormEvent) {
     e.preventDefault();
@@ -51,11 +71,20 @@ export default function AthleteList({ athletes = [], coachId, onRefresh }: Props
         {athletes.length === 0 && <li>Aucun athlète</li>}
         {athletes.map(a => (
           <li key={a.id} className="py-2 border-b">
-            <div className="flex justify-between">
+            <div className="flex justify-between items-center">
               <div>
                 <div className="font-semibold">{a.name}</div>
                 {a.email && <div className="text-sm text-gray-500">{a.email}</div>}
               </div>
+              {a.email && (
+                <button
+                  onClick={() => handleResendInvite(a.email!)}
+                  disabled={resendingEmail === a.email}
+                  className="px-2 py-1 text-xs bg-gray-200 hover:bg-gray-300 rounded disabled:bg-gray-100"
+                >
+                  {resendingEmail === a.email ? 'Envoi...' : 'Renvoyer email'}
+                </button>
+              )}
             </div>
           </li>
         ))}
