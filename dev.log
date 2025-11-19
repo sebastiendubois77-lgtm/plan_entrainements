@@ -1,0 +1,410 @@
+
+> entrainement@0.1.0 dev
+> next dev -p 3000
+
+  ▲ Next.js 14.2.33
+  - Local:        http://localhost:3000
+  - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 935ms
+ ○ Compiling / ...
+ ⨯ ./app/globals.css.webpack[javascript/auto]!=!./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./app/globals.css
+Error: It looks like you're trying to use `tailwindcss` directly as a PostCSS plugin. The PostCSS plugin has moved to a separate package, so to continue using Tailwind CSS with PostCSS you'll need to install `@tailwindcss/postcss` and update your PostCSS configuration.
+Import trace for requested module:
+./app/globals.css.webpack[javascript/auto]!=!./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./app/globals.css
+./app/globals.css
+ ⨯ ./app/globals.css.webpack[javascript/auto]!=!./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./app/globals.css
+Error: It looks like you're trying to use `tailwindcss` directly as a PostCSS plugin. The PostCSS plugin has moved to a separate package, so to continue using Tailwind CSS with PostCSS you'll need to install `@tailwindcss/postcss` and update your PostCSS configuration.
+Import trace for requested module:
+./app/globals.css.webpack[javascript/auto]!=!./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./app/globals.css
+./app/globals.css
+ GET / 500 in 1414ms
+ ⨯ ./app/globals.css.webpack[javascript/auto]!=!./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./app/globals.css
+Error: It looks like you're trying to use `tailwindcss` directly as a PostCSS plugin. The PostCSS plugin has moved to a separate package, so to continue using Tailwind CSS with PostCSS you'll need to install `@tailwindcss/postcss` and update your PostCSS configuration.
+Import trace for requested module:
+./app/globals.css.webpack[javascript/auto]!=!./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./app/globals.css
+./app/globals.css
+ ⨯ ./app/globals.css.webpack[javascript/auto]!=!./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./app/globals.css
+Error: It looks like you're trying to use `tailwindcss` directly as a PostCSS plugin. The PostCSS plugin has moved to a separate package, so to continue using Tailwind CSS with PostCSS you'll need to install `@tailwindcss/postcss` and update your PostCSS configuration.
+Import trace for requested module:
+./app/globals.css.webpack[javascript/auto]!=!./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./app/globals.css
+./app/globals.css
+ ⨯ ./app/globals.css.webpack[javascript/auto]!=!./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./app/globals.css
+Error: It looks like you're trying to use `tailwindcss` directly as a PostCSS plugin. The PostCSS plugin has moved to a separate package, so to continue using Tailwind CSS with PostCSS you'll need to install `@tailwindcss/postcss` and update your PostCSS configuration.
+Import trace for requested module:
+./app/globals.css.webpack[javascript/auto]!=!./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./app/globals.css
+./app/globals.css
+ ⨯ ./app/globals.css.webpack[javascript/auto]!=!./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./app/globals.css
+Error: It looks like you're trying to use `tailwindcss` directly as a PostCSS plugin. The PostCSS plugin has moved to a separate package, so to continue using Tailwind CSS with PostCSS you'll need to install `@tailwindcss/postcss` and update your PostCSS configuration.
+Import trace for requested module:
+./app/globals.css.webpack[javascript/auto]!=!./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./app/globals.css
+./app/globals.css
+ ⨯ ./app/globals.css.webpack[javascript/auto]!=!./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./app/globals.css
+Error: It looks like you're trying to use `tailwindcss` directly as a PostCSS plugin. The PostCSS plugin has moved to a separate package, so to continue using Tailwind CSS with PostCSS you'll need to install `@tailwindcss/postcss` and update your PostCSS configuration.
+Import trace for requested module:
+./app/globals.css.webpack[javascript/auto]!=!./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./app/globals.css
+./app/globals.css
+ ⨯ ./app/globals.css.webpack[javascript/auto]!=!./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./app/globals.css
+Error: It looks like you're trying to use `tailwindcss` directly as a PostCSS plugin. The PostCSS plugin has moved to a separate package, so to continue using Tailwind CSS with PostCSS you'll need to install `@tailwindcss/postcss` and update your PostCSS configuration.
+Import trace for requested module:
+./app/globals.css.webpack[javascript/auto]!=!./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./app/globals.css
+./app/globals.css
+ ✓ Compiled / in 75ms (361 modules)
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sebastiendubois/Documents/Entrainement/.next/fallback-build-manifest.json'
+    at readFileSync (node:fs:435:20)
+    at loadManifest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-manifest.js:36:52)
+    at loadManifestWithRetries (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-components.js:40:51)
+    at async loadDefaultErrorComponentsImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-default-error-components.js:30:24)
+    at async DevServer.getFallbackErrorComponents (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:594:16)
+    at async DevServer.renderErrorToResponseImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:2203:40)
+    at async DevServer.renderToResponseImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:2019:30)
+    at async DevServer.pipeImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:922:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/next-server.js:272:17)
+    at async DevServer.handleRequestImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:818:17)
+    at async /Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/router-server.js:179:21)
+    at async handleRequest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/router-server.js:359:24)
+    at async requestHandlerImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/router-server.js:383:13)
+    at async Server.requestListener (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/start-server.js:141:13) {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sebastiendubois/Documents/Entrainement/.next/fallback-build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sebastiendubois/Documents/Entrainement/.next/fallback-build-manifest.json'
+    at readFileSync (node:fs:435:20)
+    at loadManifest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-manifest.js:36:52)
+    at loadManifestWithRetries (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-components.js:40:51)
+    at async loadDefaultErrorComponentsImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-default-error-components.js:30:24)
+    at async DevServer.getFallbackErrorComponents (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:594:16)
+    at async DevServer.renderErrorToResponseImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:2203:40)
+    at async DevServer.renderToResponseImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:2019:30)
+    at async DevServer.pipeImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:922:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/next-server.js:272:17)
+    at async DevServer.handleRequestImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:818:17)
+    at async /Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/router-server.js:179:21)
+    at async handleRequest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/router-server.js:359:24)
+    at async requestHandlerImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/router-server.js:383:13)
+    at async Server.requestListener (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/start-server.js:141:13) {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sebastiendubois/Documents/Entrainement/.next/fallback-build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sebastiendubois/Documents/Entrainement/.next/fallback-build-manifest.json'
+    at readFileSync (node:fs:435:20)
+    at loadManifest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-manifest.js:36:52)
+    at loadManifestWithRetries (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-components.js:40:51)
+    at async loadDefaultErrorComponentsImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-default-error-components.js:30:24)
+    at async DevServer.getFallbackErrorComponents (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:594:16)
+    at async DevServer.renderErrorToResponseImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:2203:40)
+    at async pipe.req.req (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:2056:30)
+    at async DevServer.pipeImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:922:25)
+    at async /Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/router-server.js:179:21)
+    at async requestHandlerImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/router-server.js:395:24)
+    at async Server.requestListener (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/start-server.js:141:13) {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sebastiendubois/Documents/Entrainement/.next/fallback-build-manifest.json'
+}
+ GET / 500 in 712ms
+ GET / 500 in 208ms
+ ⨯ ./app/globals.css.webpack[javascript/auto]!=!./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./app/globals.css
+Error: It looks like you're trying to use `tailwindcss` directly as a PostCSS plugin. The PostCSS plugin has moved to a separate package, so to continue using Tailwind CSS with PostCSS you'll need to install `@tailwindcss/postcss` and update your PostCSS configuration.
+Import trace for requested module:
+./app/globals.css.webpack[javascript/auto]!=!./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./app/globals.css
+./app/globals.css
+ ⨯ ./app/globals.css.webpack[javascript/auto]!=!./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./app/globals.css
+Error: It looks like you're trying to use `tailwindcss` directly as a PostCSS plugin. The PostCSS plugin has moved to a separate package, so to continue using Tailwind CSS with PostCSS you'll need to install `@tailwindcss/postcss` and update your PostCSS configuration.
+Import trace for requested module:
+./app/globals.css.webpack[javascript/auto]!=!./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./app/globals.css
+./app/globals.css
+ ✓ Compiled / in 52ms (360 modules)
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sebastiendubois/Documents/Entrainement/.next/fallback-build-manifest.json'
+    at readFileSync (node:fs:435:20)
+    at loadManifest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-manifest.js:36:52)
+    at loadManifestWithRetries (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-components.js:40:51)
+    at async loadDefaultErrorComponentsImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-default-error-components.js:30:24)
+    at async DevServer.getFallbackErrorComponents (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:594:16)
+    at async DevServer.renderErrorToResponseImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:2203:40)
+    at async DevServer.renderToResponseImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:2019:30)
+    at async DevServer.pipeImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:922:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/next-server.js:272:17)
+    at async DevServer.handleRequestImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:818:17)
+    at async /Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/router-server.js:179:21)
+    at async handleRequest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/router-server.js:359:24)
+    at async requestHandlerImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/router-server.js:383:13)
+    at async Server.requestListener (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/start-server.js:141:13) {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sebastiendubois/Documents/Entrainement/.next/fallback-build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sebastiendubois/Documents/Entrainement/.next/fallback-build-manifest.json'
+    at readFileSync (node:fs:435:20)
+    at loadManifest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-manifest.js:36:52)
+    at loadManifestWithRetries (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-components.js:40:51)
+    at async loadDefaultErrorComponentsImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-default-error-components.js:30:24)
+    at async DevServer.getFallbackErrorComponents (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:594:16)
+    at async DevServer.renderErrorToResponseImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:2203:40)
+    at async DevServer.renderToResponseImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:2019:30)
+    at async DevServer.pipeImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:922:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/next-server.js:272:17)
+    at async DevServer.handleRequestImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:818:17)
+    at async /Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/router-server.js:179:21)
+    at async handleRequest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/router-server.js:359:24)
+    at async requestHandlerImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/router-server.js:383:13)
+    at async Server.requestListener (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/start-server.js:141:13) {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sebastiendubois/Documents/Entrainement/.next/fallback-build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sebastiendubois/Documents/Entrainement/.next/fallback-build-manifest.json'
+    at readFileSync (node:fs:435:20)
+    at loadManifest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-manifest.js:36:52)
+    at loadManifestWithRetries (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-components.js:40:51)
+    at async loadDefaultErrorComponentsImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-default-error-components.js:30:24)
+    at async DevServer.getFallbackErrorComponents (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:594:16)
+    at async DevServer.renderErrorToResponseImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:2203:40)
+    at async pipe.req.req (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:2056:30)
+    at async DevServer.pipeImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:922:25)
+    at async /Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/router-server.js:179:21)
+    at async requestHandlerImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/router-server.js:395:24)
+    at async Server.requestListener (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/start-server.js:141:13) {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sebastiendubois/Documents/Entrainement/.next/fallback-build-manifest.json'
+}
+ GET / 500 in 682ms
+ GET / 500 in 208ms
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sebastiendubois/Documents/Entrainement/.next/fallback-build-manifest.json'
+    at readFileSync (node:fs:435:20)
+    at loadManifest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-manifest.js:36:52)
+    at loadManifestWithRetries (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-components.js:40:51)
+    at async loadDefaultErrorComponentsImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-default-error-components.js:30:24)
+    at async DevServer.getFallbackErrorComponents (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:594:16)
+    at async DevServer.renderErrorToResponseImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:2203:40)
+    at async DevServer.renderToResponseImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:2019:30)
+    at async DevServer.pipeImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:922:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/next-server.js:272:17)
+    at async DevServer.handleRequestImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:818:17)
+    at async /Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/router-server.js:179:21)
+    at async handleRequest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/router-server.js:359:24)
+    at async requestHandlerImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/router-server.js:383:13)
+    at async Server.requestListener (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/start-server.js:141:13) {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sebastiendubois/Documents/Entrainement/.next/fallback-build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sebastiendubois/Documents/Entrainement/.next/fallback-build-manifest.json'
+    at readFileSync (node:fs:435:20)
+    at loadManifest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-manifest.js:36:52)
+    at loadManifestWithRetries (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-components.js:40:51)
+    at async loadDefaultErrorComponentsImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-default-error-components.js:30:24)
+    at async DevServer.getFallbackErrorComponents (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:594:16)
+    at async DevServer.renderErrorToResponseImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:2203:40)
+    at async DevServer.renderToResponseImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:2019:30)
+    at async DevServer.pipeImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:922:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/next-server.js:272:17)
+    at async DevServer.handleRequestImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:818:17)
+    at async /Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/router-server.js:179:21)
+    at async handleRequest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/router-server.js:359:24)
+    at async requestHandlerImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/router-server.js:383:13)
+    at async Server.requestListener (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/start-server.js:141:13) {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sebastiendubois/Documents/Entrainement/.next/fallback-build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sebastiendubois/Documents/Entrainement/.next/fallback-build-manifest.json'
+    at readFileSync (node:fs:435:20)
+    at loadManifest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-manifest.js:36:52)
+    at loadManifestWithRetries (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-components.js:40:51)
+    at async loadDefaultErrorComponentsImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-default-error-components.js:30:24)
+    at async DevServer.getFallbackErrorComponents (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:594:16)
+    at async DevServer.renderErrorToResponseImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:2203:40)
+    at async pipe.req.req (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:2056:30)
+    at async DevServer.pipeImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:922:25)
+    at async /Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/router-server.js:179:21)
+    at async requestHandlerImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/router-server.js:395:24)
+    at async Server.requestListener (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/start-server.js:141:13) {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sebastiendubois/Documents/Entrainement/.next/fallback-build-manifest.json'
+}
+ GET / 500 in 612ms
+ GET / 500 in 202ms
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sebastiendubois/Documents/Entrainement/.next/fallback-build-manifest.json'
+    at readFileSync (node:fs:435:20)
+    at loadManifest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-manifest.js:36:52)
+    at loadManifestWithRetries (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-components.js:40:51)
+    at async loadDefaultErrorComponentsImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-default-error-components.js:30:24)
+    at async DevServer.getFallbackErrorComponents (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:594:16)
+    at async DevServer.renderErrorToResponseImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:2203:40)
+    at async DevServer.renderToResponseImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:2019:30)
+    at async DevServer.pipeImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:922:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/next-server.js:272:17)
+    at async DevServer.handleRequestImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:818:17)
+    at async /Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/router-server.js:179:21)
+    at async handleRequest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/router-server.js:359:24)
+    at async requestHandlerImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/router-server.js:383:13)
+    at async Server.requestListener (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/start-server.js:141:13) {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sebastiendubois/Documents/Entrainement/.next/fallback-build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sebastiendubois/Documents/Entrainement/.next/fallback-build-manifest.json'
+    at readFileSync (node:fs:435:20)
+    at loadManifest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-manifest.js:36:52)
+    at loadManifestWithRetries (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-components.js:40:51)
+    at async loadDefaultErrorComponentsImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-default-error-components.js:30:24)
+    at async DevServer.getFallbackErrorComponents (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:594:16)
+    at async DevServer.renderErrorToResponseImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:2203:40)
+    at async DevServer.renderToResponseImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:2019:30)
+    at async DevServer.pipeImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:922:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/next-server.js:272:17)
+    at async DevServer.handleRequestImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:818:17)
+    at async /Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/router-server.js:179:21)
+    at async handleRequest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/router-server.js:359:24)
+    at async requestHandlerImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/router-server.js:383:13)
+    at async Server.requestListener (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/start-server.js:141:13) {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sebastiendubois/Documents/Entrainement/.next/fallback-build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sebastiendubois/Documents/Entrainement/.next/fallback-build-manifest.json'
+    at readFileSync (node:fs:435:20)
+    at loadManifest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-manifest.js:36:52)
+    at loadManifestWithRetries (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-components.js:40:51)
+    at async loadDefaultErrorComponentsImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-default-error-components.js:30:24)
+    at async DevServer.getFallbackErrorComponents (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:594:16)
+    at async DevServer.renderErrorToResponseImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:2203:40)
+    at async pipe.req.req (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:2056:30)
+    at async DevServer.pipeImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:922:25)
+    at async /Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/router-server.js:179:21)
+    at async requestHandlerImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/router-server.js:395:24)
+    at async Server.requestListener (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/start-server.js:141:13) {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sebastiendubois/Documents/Entrainement/.next/fallback-build-manifest.json'
+}
+ HEAD / 500 in 614ms
+ HEAD / 500 in 206ms
+ ⨯ ./app/globals.css.webpack[javascript/auto]!=!./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./app/globals.css
+Error: It looks like you're trying to use `tailwindcss` directly as a PostCSS plugin. The PostCSS plugin has moved to a separate package, so to continue using Tailwind CSS with PostCSS you'll need to install `@tailwindcss/postcss` and update your PostCSS configuration.
+Import trace for requested module:
+./app/globals.css.webpack[javascript/auto]!=!./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./app/globals.css
+./app/globals.css
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sebastiendubois/Documents/Entrainement/.next/fallback-build-manifest.json'
+    at readFileSync (node:fs:435:20)
+    at loadManifest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-manifest.js:36:52)
+    at loadManifestWithRetries (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-components.js:40:51)
+    at async loadDefaultErrorComponentsImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-default-error-components.js:30:24)
+    at async DevServer.getFallbackErrorComponents (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:594:16)
+    at async DevServer.renderErrorToResponseImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:2203:40)
+    at async DevServer.renderToResponseImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:2019:30)
+    at async DevServer.pipeImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:922:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/next-server.js:272:17)
+    at async DevServer.handleRequestImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:818:17)
+    at async /Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/router-server.js:179:21)
+    at async handleRequest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/router-server.js:359:24)
+    at async requestHandlerImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/router-server.js:383:13)
+    at async Server.requestListener (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/start-server.js:141:13) {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sebastiendubois/Documents/Entrainement/.next/fallback-build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sebastiendubois/Documents/Entrainement/.next/fallback-build-manifest.json'
+    at readFileSync (node:fs:435:20)
+    at loadManifest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-manifest.js:36:52)
+    at loadManifestWithRetries (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-components.js:40:51)
+    at async loadDefaultErrorComponentsImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-default-error-components.js:30:24)
+    at async DevServer.getFallbackErrorComponents (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:594:16)
+    at async DevServer.renderErrorToResponseImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:2203:40)
+    at async DevServer.renderToResponseImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:2019:30)
+    at async DevServer.pipeImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:922:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/next-server.js:272:17)
+    at async DevServer.handleRequestImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:818:17)
+    at async /Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/router-server.js:179:21)
+    at async handleRequest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/router-server.js:359:24)
+    at async requestHandlerImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/router-server.js:383:13)
+    at async Server.requestListener (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/start-server.js:141:13) {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sebastiendubois/Documents/Entrainement/.next/fallback-build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sebastiendubois/Documents/Entrainement/.next/fallback-build-manifest.json'
+    at readFileSync (node:fs:435:20)
+    at loadManifest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-manifest.js:36:52)
+    at loadManifestWithRetries (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-components.js:40:51)
+    at async loadDefaultErrorComponentsImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/load-default-error-components.js:30:24)
+    at async DevServer.getFallbackErrorComponents (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:594:16)
+    at async DevServer.renderErrorToResponseImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:2203:40)
+    at async pipe.req.req (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:2056:30)
+    at async DevServer.pipeImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/base-server.js:922:25)
+    at async /Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/router-server.js:179:21)
+    at async requestHandlerImpl (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/router-server.js:395:24)
+    at async Server.requestListener (/Users/sebastiendubois/Documents/Entrainement/node_modules/next/dist/server/lib/start-server.js:141:13) {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sebastiendubois/Documents/Entrainement/.next/fallback-build-manifest.json'
+}
+ GET / 500 in 623ms
+ GET / 500 in 208ms
+[?25h
