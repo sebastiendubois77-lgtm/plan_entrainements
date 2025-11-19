@@ -13,9 +13,12 @@ function AuthCallbackContent() {
   const [isRecovery, setIsRecovery] = useState(false);
 
   useEffect(() => {
-    // Check if this is a password recovery flow
-    const type = searchParams.get('type');
-    if (type === 'recovery') {
+    // Check if this is a password recovery flow from query params or hash
+    const typeFromQuery = searchParams.get('type');
+    const hash = window.location.hash;
+    const isRecoveryFromHash = hash.includes('type=recovery') || hash.includes('type=magiclink');
+    
+    if (typeFromQuery === 'recovery' || isRecoveryFromHash) {
       setIsRecovery(true);
     } else {
       // Handle other auth callbacks (email confirmation, etc.)
