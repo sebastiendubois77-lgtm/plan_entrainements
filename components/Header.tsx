@@ -23,17 +23,10 @@ export default function Header() {
 
   return (
     <header className="bg-white shadow-sm">
-      <div className="max-w-5xl mx-auto flex items-center justify-between p-4">
-        <Link href="/"><span className="font-bold">CoachApp</span></Link>
-        <nav className="flex gap-4 items-center">
-          <Link href="/coach/dashboard">Coach</Link>
-          <Link href="/athlete/dashboard">Athlète</Link>
-          {user ? (
-            <button className="text-sm" onClick={signOut}>Se déconnecter</button>
-          ) : (
-            <Link href="/">Se connecter</Link>
-          )}
-        </nav>
+      <div className="max-w-5xl mx-auto flex items-center justify-center p-4">
+        <Link href="/">
+          <img src="/logo.svg" alt="logo" className="w-10 h-10 object-contain" />
+        </Link>
       </div>
     </header>
   );
