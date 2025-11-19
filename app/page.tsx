@@ -19,7 +19,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white">
+    <div className="min-h-screen bg-white pt-8">
       <div className="w-full max-w-2xl mx-auto p-8 text-center">
         <div>
           <h1 className="text-4xl font-extrabold">Les plans de Seb</h1>
