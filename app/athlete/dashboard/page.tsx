@@ -11,7 +11,8 @@ export default function AthleteDashboard() {
       const { data: u } = await supabase.auth.getUser();
       const user = u.user;
       if (!user) return;
-      const { data } = await supabase.from('athletes').select('*').eq('user_id', user.id).single();
+      // profiles table used now: match auth_uid
+      const { data } = await supabase.from('profiles').select('id,full_name,email,role,created_at,coach_user_id').eq('auth_uid', user.id).maybeSingle();
       setAthlete(data);
     })();
   }, []);
@@ -23,8 +24,8 @@ export default function AthleteDashboard() {
       {athlete && (
         <>
           <div className="bg-white p-4 rounded shadow mb-6">
-            <div className="font-bold">{athlete.name}</div>
-            <div className="text-sm text-gray-600">{athlete.sport}</div>
+            <div className="font-bold">{athlete.full_name || athlete.email}</div>
+            <div className="text-sm text-gray-600">Membre depuis {new Date(athlete.created_at).toLocaleDateString()}</div>
           </div>
           <div className="bg-white p-4 rounded shadow">
             <h3 className="font-semibold mb-2">Saisir séance réalisée</h3>

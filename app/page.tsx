@@ -12,10 +12,19 @@ export default function Home() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({ email: compte, password });
+    const { data, error } = await supabase.auth.signInWithPassword({ email: compte, password });
     setLoading(false);
-    if (!error) router.push('/athlete/dashboard');
-    else alert(error.message);
+    if (error) return alert(error.message);
+    const user = data.user;
+    if (!user) return router.push('/');
+    // fetch profile to get role
+    try {
+      const { data: profile, error: pErr } = await supabase.from('profiles').select('role').eq('auth_uid', user.id).maybeSingle();
+      if (!pErr && profile && profile.role === 'coach') router.push('/coach/dashboard');
+      else router.push('/athlete/dashboard');
+    } catch (e) {
+      router.push('/athlete/dashboard');
+    }
   }
 
   return (

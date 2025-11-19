@@ -11,7 +11,7 @@ type Props = {
 export default function AthleteList({ athletes = [], coachId, onRefresh }: Props) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [sport, setSport] = useState('');
+  // sport removed: plans are running-only
   const [loading, setLoading] = useState(false);
 
   async function handleAdd(e: React.FormEvent) {
@@ -22,12 +22,12 @@ export default function AthleteList({ athletes = [], coachId, onRefresh }: Props
       const res = await fetch('/api/create-athlete', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, sport, coachId })
+        body: JSON.stringify({ name, email, coachId })
       });
       const data = await res.json();
       setLoading(false);
       if (!res.ok) return alert('Erreur: ' + JSON.stringify(data));
-      setName(''); setEmail(''); setSport('');
+      setName(''); setEmail('');
       if (onRefresh) onRefresh();
       // inform the coach that an email was sent so the athlete can set their password
       if (data.message === 'reset_email_sent') alert('Athlète créé. Un e-mail a été envoyé pour définir le mot de passe.');
@@ -39,10 +39,9 @@ export default function AthleteList({ athletes = [], coachId, onRefresh }: Props
 
   return (
     <div>
-      <form onSubmit={handleAdd} className="mb-4 grid grid-cols-3 gap-2">
+      <form onSubmit={handleAdd} className="mb-4 grid grid-cols-2 gap-2">
         <input className="p-2 border rounded" placeholder="Nom" value={name} onChange={e=>setName(e.target.value)} />
         <input className="p-2 border rounded" placeholder="Email" value={email} onChange={e=>setEmail(e.target.value)} />
-        <input className="p-2 border rounded" placeholder="Sport" value={sport} onChange={e=>setSport(e.target.value)} />
         <div className="col-span-3 text-right">
           <button className="px-3 py-1 bg-blue-600 text-white rounded" disabled={loading}>{loading ? 'Ajout...' : 'Ajouter athlète'}</button>
         </div>
