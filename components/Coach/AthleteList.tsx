@@ -29,7 +29,8 @@ export default function AthleteList({ athletes = [], coachId, onRefresh }: Props
       if (!res.ok) return alert('Erreur: ' + JSON.stringify(data));
       setName(''); setEmail(''); setSport('');
       if (onRefresh) onRefresh();
-      if (data.password) alert(`Athlète créé. Mot de passe temporaire: ${data.password}`);
+      // inform the coach that an email was sent so the athlete can set their password
+      if (data.message === 'reset_email_sent') alert('Athlète créé. Un e-mail a été envoyé pour définir le mot de passe.');
     } catch (err: any) {
       setLoading(false);
       alert('Erreur: ' + (err.message || String(err)));

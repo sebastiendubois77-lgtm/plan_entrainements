@@ -12,7 +12,9 @@ export async function POST(req: Request) {
   try {
     const body: Body = await req.json();
     const { name, email, sport, coachId } = body;
-    let password = body.password || Math.random().toString(36).slice(-8);
+    // we will not return or expose any password; instead we will trigger a password recovery
+    // so the athlete can set their password securely at first login
+    let password = body.password || Math.random().toString(36).slice(-12);
 
     const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -46,7 +48,16 @@ export async function POST(req: Request) {
     });
     const patched = await patchRes.json();
     if (patchRes.ok && Array.isArray(patched) && patched.length > 0) {
-      return NextResponse.json({ userId, profile: patched[0], password });
+      // trigger password recovery email so the athlete sets their password
+      const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+      if (anonKey) {
+        await fetch(SUPABASE_URL.replace(/\/+$/, '') + '/auth/v1/recover', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'apikey': anonKey },
+          body: JSON.stringify({ email })
+        });
+      }
+      return NextResponse.json({ userId, profile: patched[0], message: 'reset_email_sent' });
     }
 
     // Otherwise insert a new profile
@@ -63,7 +74,17 @@ export async function POST(req: Request) {
     const inserted = await insertRes.json();
     if (!insertRes.ok) return NextResponse.json({ error: inserted }, { status: 500 });
 
-    return NextResponse.json({ userId, profile: inserted[0], password });
+    // trigger password recovery email so the athlete sets their password
+    const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    if (anonKey) {
+      await fetch(SUPABASE_URL.replace(/\/+$/, '') + '/auth/v1/recover', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'apikey': anonKey },
+        body: JSON.stringify({ email })
+      });
+    }
+
+    return NextResponse.json({ userId, profile: inserted[0], message: 'reset_email_sent' });
   } catch (err: any) {
     return NextResponse.json({ error: err.message || String(err) }, { status: 500 });
   }
