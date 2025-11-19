@@ -54,7 +54,7 @@ export async function POST(req: Request) {
         await fetch(SUPABASE_URL.replace(/\/+$/, '') + '/auth/v1/recover', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'apikey': anonKey },
-          body: JSON.stringify({ email, options: { redirectTo: productionUrl } })
+          body: JSON.stringify({ email, options: { redirectTo: `${productionUrl}/auth/callback` } })
         });
       }
       return NextResponse.json({ userId, profile: patched[0], message: 'reset_email_sent' });
@@ -81,7 +81,7 @@ export async function POST(req: Request) {
       await fetch(SUPABASE_URL.replace(/\/+$/, '') + '/auth/v1/recover', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'apikey': anonKey },
-        body: JSON.stringify({ email, options: { redirectTo: productionUrl } })
+        body: JSON.stringify({ email, options: { redirectTo: `${productionUrl}/auth/callback` } })
       });
     }
 
