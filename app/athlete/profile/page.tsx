@@ -134,6 +134,7 @@ export default function AthleteProfile() {
     const { error } = await supabase
       .from('profiles')
       .update({
+        full_name: profile.full_name || null,
         photo_url: photoUrl || null,
         date_naissance: dateNaissance || null,
         jours_disponibles: joursDisponibles,
@@ -162,120 +163,140 @@ export default function AthleteProfile() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-4xl font-extrabold">Mon profil</h1>
-        <button
-          onClick={() => router.push('/athlete/dashboard')}
-          className="px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
-        >
-          ← Retour au plan
-        </button>
-      </div>
-
-      <div className="bg-white rounded-xl shadow p-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="md:col-span-1 flex flex-col items-center">
-            <div className="w-32 h-32 bg-gray-100 rounded-full overflow-hidden mb-4">
-              {photoUrl ? (
-                <img src={photoUrl} alt="Photo de profil" className="w-full h-full object-cover" />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-gray-400">No photo</div>
-              )}
-            </div>
-            <label className="block text-sm font-medium mb-2">Changer la photo</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handlePhotoUpload}
-              disabled={uploading}
-              className="w-full p-2 border rounded"
-            />
-            <p className="text-xs text-gray-500 mt-2">{uploading ? 'Téléchargement...' : 'Max 2 Mo • JPG/PNG/WebP'}</p>
-          </div>
-
-          <div className="md:col-span-2">
-            <form onSubmit={handleSave} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium mb-2">Prénom & Nom</label>
-                  <input
-                    type="text"
-                    value={profile?.full_name || ''}
-                    onChange={(e) => setProfile(prev => ({ ...prev, full_name: e.target.value }))}
-                    className="w-full p-3 border rounded-lg"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">Date de naissance</label>
-                  <input
-                    type="date"
-                    value={dateNaissance}
-                    onChange={e => setDateNaissance(e.target.value)}
-                    className="w-full p-3 border rounded-lg"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-2">Objectif</label>
-                <textarea
-                  value={objectif}
-                  onChange={e => setObjectif(e.target.value)}
-                  className="w-full p-3 border rounded-lg"
-                  rows={3}
-                  placeholder="Ex: Courir un semi-marathon en moins de 2h"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-2">Jours disponibles</label>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                  {JOURS.map(jour => (
-                    <label key={jour} className={`flex items-center space-x-2 p-2 border rounded cursor-pointer hover:bg-gray-50 ${joursDisponibles.includes(jour) ? 'bg-blue-50 border-blue-200' : ''}`}>
-                      <input
-                        type="checkbox"
-                        checked={joursDisponibles.includes(jour)}
-                        onChange={() => toggleJour(jour)}
-                        className="w-4 h-4"
-                      />
-                      <span>{jour}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-2">Nombre d'entraînements / semaine: <span className="font-semibold">{entrainementsParSemaine}</span></label>
-                <input
-                  type="range"
-                  min="1"
-                  max="7"
-                  value={entrainementsParSemaine}
-                  onChange={e => setEntrainementsParSemaine(Number(e.target.value))}
-                  className="w-full"
-                />
-              </div>
-
-              <div className="flex gap-4">
-                <button
-                  type="submit"
-                  disabled={saving}
-                  className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400"
-                >
-                  {saving ? 'Enregistrement...' : 'Enregistrer'}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => router.push('/athlete/dashboard')}
-                  className="px-6 py-3 bg-gray-100 rounded-lg hover:bg-gray-200"
-                >
-                  Annuler
-                </button>
-              </div>
-            </form>
-          </div>
+    <div className="min-h-screen bg-gray-50 p-6">
+      <div className="max-w-5xl mx-auto">
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-4xl font-extrabold text-gray-900">Mon profil</h1>
+          <button
+            onClick={() => router.push('/athlete/dashboard')}
+            className="px-5 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 shadow-sm"
+          >
+            ← Retour au plan
+          </button>
         </div>
+
+        <form onSubmit={handleSave}>
+          {/* Photo Section */}
+          <div className="bg-white rounded-xl shadow-sm p-8 mb-6">
+            <h2 className="text-xl font-bold mb-6 text-gray-900">Photo de profil</h2>
+            <div className="flex items-center gap-8">
+              <div className="w-32 h-32 bg-gray-100 rounded-full overflow-hidden flex-shrink-0">
+                {photoUrl ? (
+                  <img src={photoUrl} alt="Photo de profil" className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">Aucune photo</div>
+                )}
+              </div>
+              <div className="flex-1">
+                <label className="block text-sm font-medium text-gray-700 mb-3">Choisir une nouvelle photo</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handlePhotoUpload}
+                  disabled={uploading}
+                  className="w-full p-3 border border-gray-300 rounded-lg text-sm"
+                />
+                <p className="text-sm text-gray-500 mt-2">{uploading ? 'Téléchargement en cours...' : 'Maximum 2 Mo • Formats acceptés: JPG, PNG, WebP'}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Personal Info Section */}
+          <div className="bg-white rounded-xl shadow-sm p-8 mb-6">
+            <h2 className="text-xl font-bold mb-6 text-gray-900">Informations personnelles</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-3">Prénom & Nom</label>
+                <input
+                  type="text"
+                  value={profile?.full_name || ''}
+                  onChange={(e) => setProfile(prev => ({ ...prev, full_name: e.target.value }))}
+                  className="w-full p-4 border border-gray-300 rounded-lg text-base focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Votre nom complet"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-3">Date de naissance</label>
+                <input
+                  type="date"
+                  value={dateNaissance}
+                  onChange={e => setDateNaissance(e.target.value)}
+                  className="w-full p-4 border border-gray-300 rounded-lg text-base focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Objective Section */}
+          <div className="bg-white rounded-xl shadow-sm p-8 mb-6">
+            <h2 className="text-xl font-bold mb-6 text-gray-900">Mon objectif</h2>
+            <textarea
+              value={objectif}
+              onChange={e => setObjectif(e.target.value)}
+              className="w-full p-4 border border-gray-300 rounded-lg text-base focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              rows={4}
+              placeholder="Ex: Courir un semi-marathon en moins de 2h"
+            />
+          </div>
+
+          {/* Availability Section */}
+          <div className="bg-white rounded-xl shadow-sm p-8 mb-6">
+            <h2 className="text-xl font-bold mb-6 text-gray-900">Disponibilités</h2>
+            
+            <div className="mb-8">
+              <label className="block text-sm font-semibold text-gray-700 mb-4">Jours disponibles pour m'entraîner</label>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                {JOURS.map(jour => (
+                  <label key={jour} className={`flex items-center space-x-3 p-4 border-2 rounded-lg cursor-pointer transition-all ${joursDisponibles.includes(jour) ? 'bg-blue-50 border-blue-500' : 'border-gray-200 hover:bg-gray-50'}`}>
+                    <input
+                      type="checkbox"
+                      checked={joursDisponibles.includes(jour)}
+                      onChange={() => toggleJour(jour)}
+                      className="w-5 h-5 text-blue-600"
+                    />
+                    <span className="font-medium">{jour}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-4">
+                Nombre d'entraînements par semaine: <span className="text-blue-600 text-lg">{entrainementsParSemaine}</span>
+              </label>
+              <input
+                type="range"
+                min="1"
+                max="7"
+                value={entrainementsParSemaine}
+                onChange={e => setEntrainementsParSemaine(Number(e.target.value))}
+                className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+              />
+              <div className="flex justify-between text-sm text-gray-500 mt-2">
+                <span>1 séance</span>
+                <span>7 séances</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex gap-4 justify-end">
+            <button
+              type="button"
+              onClick={() => router.push('/athlete/dashboard')}
+              className="px-8 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium shadow-sm"
+            >
+              Annuler
+            </button>
+            <button
+              type="submit"
+              disabled={saving}
+              className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 font-medium shadow-sm"
+            >
+              {saving ? 'Enregistrement...' : 'Enregistrer les modifications'}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
