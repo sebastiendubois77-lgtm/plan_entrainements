@@ -204,24 +204,24 @@ export default function AthleteProfile() {
           {/* Personal Info Section */}
           <div className="bg-white rounded-xl shadow-sm p-8 mb-6">
             <h2 className="text-xl font-bold mb-6 text-gray-900">Informations personnelles</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-3">Prénom & Nom</label>
+                <label className="block text-lg font-semibold text-gray-800 mb-3">Prénom & Nom</label>
                 <input
                   type="text"
                   value={profile?.full_name || ''}
                   onChange={(e) => setProfile(prev => ({ ...prev, full_name: e.target.value }))}
-                  className="w-full p-4 border border-gray-300 rounded-lg text-base focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full max-w-xl p-4 border border-gray-300 rounded-lg text-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Votre nom complet"
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-3">Date de naissance</label>
+                <label className="block text-lg font-semibold text-gray-800 mb-3">Date de naissance</label>
                 <input
                   type="date"
                   value={dateNaissance}
                   onChange={e => setDateNaissance(e.target.value)}
-                  className="w-full p-4 border border-gray-300 rounded-lg text-base focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full max-w-md p-4 border border-gray-300 rounded-lg text-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
             </div>
@@ -230,13 +230,15 @@ export default function AthleteProfile() {
           {/* Objective Section */}
           <div className="bg-white rounded-xl shadow-sm p-8 mb-6">
             <h2 className="text-xl font-bold mb-6 text-gray-900">Mon objectif</h2>
-            <textarea
-              value={objectif}
-              onChange={e => setObjectif(e.target.value)}
-              className="w-full p-4 border border-gray-300 rounded-lg text-base focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              rows={4}
-              placeholder="Ex: Courir un semi-marathon en moins de 2h"
-            />
+            <div className="max-w-2xl">
+              <textarea
+                value={objectif}
+                onChange={e => setObjectif(e.target.value)}
+                className="w-full max-w-2xl p-4 border border-gray-300 rounded-lg text-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-vertical"
+                rows={4}
+                placeholder="Ex: Courir un semi-marathon en moins de 2h"
+              />
+            </div>
           </div>
 
           {/* Availability Section */}
@@ -244,37 +246,35 @@ export default function AthleteProfile() {
             <h2 className="text-xl font-bold mb-6 text-gray-900">Disponibilités</h2>
             
             <div className="mb-8">
-              <label className="block text-sm font-semibold text-gray-700 mb-4">Jours disponibles pour m'entraîner</label>
+              <label className="block text-lg font-semibold text-gray-700 mb-4">Jours disponibles pour m'entraîner</label>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                 {JOURS.map(jour => (
-                  <label key={jour} className={`flex items-center space-x-3 p-4 border-2 rounded-lg cursor-pointer transition-all ${joursDisponibles.includes(jour) ? 'bg-blue-50 border-blue-500' : 'border-gray-200 hover:bg-gray-50'}`}>
+                  <label key={jour} className={`flex items-center space-x-3 p-3 border rounded-lg cursor-pointer transition-all ${joursDisponibles.includes(jour) ? 'bg-blue-50 border-blue-300' : 'border-gray-200 hover:bg-gray-50'}`}>
                     <input
                       type="checkbox"
                       checked={joursDisponibles.includes(jour)}
                       onChange={() => toggleJour(jour)}
                       className="w-5 h-5 text-blue-600"
                     />
-                    <span className="font-medium">{jour}</span>
+                    <span className="font-medium text-lg">{jour}</span>
                   </label>
                 ))}
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-4">
-                Nombre d'entraînements par semaine: <span className="text-blue-600 text-lg">{entrainementsParSemaine}</span>
-              </label>
-              <input
-                type="range"
-                min="1"
-                max="7"
-                value={entrainementsParSemaine}
-                onChange={e => setEntrainementsParSemaine(Number(e.target.value))}
-                className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-              />
-              <div className="flex justify-between text-sm text-gray-500 mt-2">
-                <span>1 séance</span>
-                <span>7 séances</span>
+              <label className="block text-lg font-semibold text-gray-700 mb-3">Nombre d'entraînements par semaine</label>
+              <div className="flex items-center gap-4">
+                <select
+                  value={entrainementsParSemaine}
+                  onChange={e => setEntrainementsParSemaine(Number(e.target.value))}
+                  className="p-3 border border-gray-300 rounded-lg text-lg bg-white"
+                >
+                  {[1,2,3,4,5,6,7].map(n => (
+                    <option key={n} value={n}>{n} séance{n>1? 's':''}</option>
+                  ))}
+                </select>
+                <div className="text-sm text-gray-500">Choisissez le nombre de séances par semaine</div>
               </div>
             </div>
           </div>
