@@ -228,7 +228,7 @@ export default function TrainingPlanView({ athlete }: { athlete: Athlete }) {
         <div className="text-xs text-gray-600 mb-1">{date.getDate()}/{date.getMonth() + 1}</div>
         
         {raceOnDate && (
-          <div className="bg-blue-200 p-2 rounded mb-1 text-xs font-semibold">
+          <div style={{ backgroundColor: '#BFDBFE' }} className="p-2 rounded mb-1 text-xs font-semibold">
             🏁 {raceOnDate.nom}
             <div>{raceOnDate.distance}</div>
           </div>
@@ -344,7 +344,7 @@ export default function TrainingPlanView({ athlete }: { athlete: Athlete }) {
           
           {/* Courses prévues */}
           <div className="flex-1">
-            <div className="bg-blue-50 p-4 rounded">
+            <div style={{ backgroundColor: '#EFF6FF' }} className="p-4 rounded">
               <div className="font-bold text-sm mb-3">🏁 Courses prévues</div>
               {athlete.courses && athlete.courses.length > 0 ? (
                 <div className="space-y-2">
