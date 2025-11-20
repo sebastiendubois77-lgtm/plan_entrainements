@@ -167,7 +167,6 @@ export default function TrainingPlanView({ athlete }: { athlete: Athlete }) {
     const dateStr = formatDate(date);
     const session = sessions[dateStr];
     const isEditing = editingCell === dateStr;
-    const bgColor = raceOnDate ? SESSION_COLORS.course : (session ? SESSION_COLORS[session.session_type] : SESSION_COLORS.repos);
 
     if (isPast) {
       // Historique : afficher planifié + réalisé (non éditable)
@@ -177,7 +176,14 @@ export default function TrainingPlanView({ athlete }: { athlete: Athlete }) {
           {session ? (
             <>
               {/* Planifié */}
-              <div className={`${bgColor} p-1 rounded mb-1 text-xs`}>
+              <div className={`p-1 rounded mb-1 text-xs ${
+                session.session_type === 'endurance' ? 'bg-yellow-100' :
+                session.session_type === 'resistance' ? 'bg-orange-200' :
+                session.session_type === 'vitesse' ? 'bg-red-200' :
+                session.session_type === 'vma' ? 'bg-purple-200' :
+                session.session_type === 'course' ? 'bg-blue-200' :
+                'bg-gray-100'
+              }`}>
                 <div className="font-semibold">{session.session_type}</div>
                 {session.description && (
                   <div className="text-xs truncate">{session.description}</div>
@@ -200,7 +206,7 @@ export default function TrainingPlanView({ athlete }: { athlete: Athlete }) {
               )}
             </>
           ) : raceOnDate ? (
-            <div className="bg-blue-300 p-1 rounded text-xs">
+            <div className="bg-blue-200 p-1 rounded text-xs">
               <div className="font-semibold">🏁 {raceOnDate.nom}</div>
               <div className="text-xs">{raceOnDate.distance}</div>
             </div>
@@ -217,7 +223,7 @@ export default function TrainingPlanView({ athlete }: { athlete: Athlete }) {
         <div className="text-xs text-gray-600 mb-1">{date.getDate()}/{date.getMonth() + 1}</div>
         
         {raceOnDate && (
-          <div className={`${SESSION_COLORS.course} p-2 rounded mb-1 text-xs font-semibold`}>
+          <div className="bg-blue-200 p-2 rounded mb-1 text-xs font-semibold">
             🏁 {raceOnDate.nom}
             <div>{raceOnDate.distance}</div>
           </div>
@@ -268,7 +274,14 @@ export default function TrainingPlanView({ athlete }: { athlete: Athlete }) {
         ) : !raceOnDate && session ? (
           <div
             onClick={() => setEditingCell(dateStr)}
-            className={`${bgColor} p-2 rounded cursor-pointer hover:opacity-80 min-h-[60px]`}
+            className={`p-2 rounded cursor-pointer hover:opacity-80 min-h-[60px] ${
+              session.session_type === 'endurance' ? 'bg-yellow-100' :
+              session.session_type === 'resistance' ? 'bg-orange-200' :
+              session.session_type === 'vitesse' ? 'bg-red-200' :
+              session.session_type === 'vma' ? 'bg-purple-200' :
+              session.session_type === 'course' ? 'bg-blue-200' :
+              'bg-gray-100'
+            }`}
           >
             <div className="font-semibold text-xs">{session.session_type}</div>
             <div className="text-xs mt-1">{session.description}</div>
