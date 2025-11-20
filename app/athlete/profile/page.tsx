@@ -85,28 +85,48 @@ export default function AthleteProfile() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (!file.type.startsWith('image/')) {
-      alert('Veuillez sélectionner une image');
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      alert('Format non supporté. Utilisez JPG, PNG, GIF ou WebP');
+      e.target.value = ''; // Reset input
       return;
     }
 
-    if (file.size > 5 * 1024 * 1024) {
-      alert('La taille maximale est de 5 Mo');
+    // Validate file size (2 MB max)
+    const maxSize = 2 * 1024 * 1024; // 2 MB
+    if (file.size > maxSize) {
+      const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+      alert(`Image trop volumineuse (${sizeMB} Mo). Taille maximale : 2 Mo\n\nConseil : réduisez la résolution ou compressez l'image avant de l'uploader.`);
+      e.target.value = ''; // Reset input
       return;
     }
 
     setUploading(true);
 
     try {
+      // Get current user ID
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Non authentifié');
+
       const fileExt = file.name.split('.').pop();
-      const fileName = `${profile.id}-${Date.now()}.${fileExt}`;
-      const filePath = `avatars/${fileName}`;
+      const fileName = `${Date.now()}.${fileExt}`;
+      const filePath = `${user.id}/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
         .from('avatars')
-        .upload(filePath, file, { upsert: true });
+        .upload(filePath, file, { 
+          upsert: true,
+          contentType: file.type
+        });
 
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        // Check if error is due to file size on server side
+        if (uploadError.message.includes('size') || uploadError.message.includes('limit')) {
+          throw new Error('Fichier trop volumineux. Maximum 2 Mo.');
+        }
+        throw uploadError;
+      }
 
       const { data: { publicUrl } } = supabase.storage
         .from('avatars')
@@ -116,6 +136,7 @@ export default function AthleteProfile() {
       alert('Photo téléchargée avec succès !');
     } catch (error: any) {
       alert('Erreur lors du téléchargement: ' + error.message);
+      e.target.value = ''; // Reset input
     } finally {
       setUploading(false);
     }
