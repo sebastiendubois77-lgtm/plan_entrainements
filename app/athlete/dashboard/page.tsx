@@ -324,28 +324,32 @@ export default function AthleteDashboard() {
         )}
         
         {/* Séance planifiée (si existe et pas de course) */}
-        {!raceOnDate && session && (
-          <div
-            className="p-2 rounded mb-2 shadow-sm"
-            style={{
-              backgroundColor: (
-                session.session_type === 'endurance' ? '#FEF3C7' :
-                session.session_type === 'resistance' ? '#FED7AA' :
-                session.session_type === 'vitesse' ? '#FECACA' :
-                session.session_type === 'vma' ? '#E9D5FF' :
-                session.session_type === 'course' ? '#BFDBFE' :
-                '#F3F4F6'
-              )
-            }}
-          >
-            <div className="font-semibold text-sm">
-              {session.session_type}
+        {!raceOnDate && session && (() => {
+          const hideReposLabel = session.session_type === 'repos' && (session.is_completed || session.completed_notes || (session.description && session.description.trim().length > 0));
+          if (hideReposLabel) return null;
+          return (
+            <div
+              className="p-2 rounded mb-2 shadow-sm"
+              style={{
+                backgroundColor: (
+                  session.session_type === 'endurance' ? '#FEF3C7' :
+                  session.session_type === 'resistance' ? '#FED7AA' :
+                  session.session_type === 'vitesse' ? '#FECACA' :
+                  session.session_type === 'vma' ? '#E9D5FF' :
+                  session.session_type === 'course' ? '#BFDBFE' :
+                  '#F3F4F6'
+                )
+              }}
+            >
+              <div className="font-semibold text-sm">
+                {session.session_type}
+              </div>
+              {session.description && (
+                <div className="text-xs mt-1">{session.description}</div>
+              )}
             </div>
-            {session.description && (
-              <div className="text-xs mt-1">{session.description}</div>
-            )}
-          </div>
-        )}
+          );
+        })()}
 
         {/* Affichage du réalisé ou bouton d'ajout */}
         {(session?.is_completed || session?.completed_notes) ? (
@@ -392,59 +396,46 @@ export default function AthleteDashboard() {
   return (
     <>
       <div className="p-8 max-w-7xl mx-auto">
-      {/* En-tête moderne avec objectif et courses */}
-      <div className="rounded-xl overflow-hidden mb-6 shadow-lg" style={{ background: 'linear-gradient(90deg,#0ea5e9 0%,#6366f1 100%)' }}>
-        <div className="p-6 text-white flex items-start justify-between gap-6">
-          <div className="flex-1">
-            {profile.objectif && (
-              <div className="mb-2">
-                <div className="text-sm uppercase tracking-wide opacity-90">🎯 Objectif</div>
-                <div className="text-2xl lg:text-3xl font-extrabold leading-tight mt-1">{profile.objectif}</div>
+      {/* En-tête : objectif centré (discret et lisible) */}
+      <div className="mb-4">
+        <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="text-center">
+            {profile.objectif ? (
+              <div className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight">
+                🎯 {profile.objectif}
               </div>
+            ) : (
+              <div className="text-lg text-gray-600">Aucun objectif défini</div>
             )}
-            <div className="mt-4">
-              <a href="/athlete/profile" className="text-sm font-medium underline">Éditer mon profil</a>
-            </div>
           </div>
-          <div className="w-80">
-            <div className="bg-white/95 p-4 rounded-lg shadow">
-              <div className="flex items-center justify-between mb-3">
-                <div className="font-bold text-sm">🏁 Courses prévues</div>
-                <button
-                  onClick={() => setShowRaceModal(true)}
-                  className="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
-                >
-                  + Ajouter
-                </button>
-              </div>
-              {profile.courses && profile.courses.length > 0 ? (
-                <div className="space-y-2">
-                  {[...profile.courses]
-                    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-                    .map((race: Race, idx: number) => {
-                      const originalIdx = profile.courses!.indexOf(race);
-                      return (
-                        <div key={idx} className="flex items-center justify-between bg-white p-3 rounded shadow-sm">
-                          <div className="text-sm">
-                            <div className="text-xs text-gray-500">{new Date(race.date).toLocaleDateString('fr-FR')}</div>
-                            <div className="font-semibold">{race.nom}</div>
-                            <div className="text-xs text-gray-600">{race.distance} km</div>
-                          </div>
-                          <button
-                            onClick={() => setRaceToDelete(originalIdx)}
-                            className="text-red-600 hover:text-red-800 text-lg"
-                          >
-                            ✕
-                          </button>
-                        </div>
-                      );
-                    })}
-                </div>
-              ) : (
-                <div className="text-sm text-gray-500 italic">Aucune course prévue</div>
-              )}
-            </div>
+        </div>
+      </div>
+
+      {/* Courses programmées sur une ligne */}
+      <div className="mb-6">
+        <div className="flex items-center gap-4">
+          <div className="font-semibold">🏁 Courses programmées</div>
+          <div className="flex-1 flex flex-wrap gap-2">
+            {profile.courses && profile.courses.length > 0 ? (
+              [...profile.courses]
+                .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+                .map((race: Race, idx: number) => (
+                  <div key={idx} className="px-3 py-2 bg-blue-50 text-blue-800 rounded-full text-sm flex items-center gap-2">
+                    <span className="text-xs text-gray-500">{new Date(race.date).toLocaleDateString('fr-FR')}</span>
+                    <span className="font-medium">{race.nom}</span>
+                    <span className="text-xs text-gray-600">{race.distance} km</span>
+                  </div>
+                ))
+            ) : (
+              <div className="text-sm text-gray-500 italic">Aucune course programmée</div>
+            )}
           </div>
+          <button
+            onClick={() => setShowRaceModal(true)}
+            className="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+          >
+            + Ajouter
+          </button>
         </div>
       </div>
 
