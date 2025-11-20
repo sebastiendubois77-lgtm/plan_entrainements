@@ -316,7 +316,8 @@ export default function AthleteDashboard() {
   }
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
+    <>
+      <div className="p-6 max-w-7xl mx-auto">
       {/* En-tête avec objectif et courses */}
       <div className="bg-white rounded-lg shadow p-6 mb-6">
         <div className="flex items-start justify-between gap-6">
@@ -397,6 +398,7 @@ export default function AthleteDashboard() {
           );
         })}
       </div>
+    </div>
 
       {/* Modale d'édition */}
       {editingCell && editingDate && (
@@ -506,6 +508,6 @@ export default function AthleteDashboard() {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }
