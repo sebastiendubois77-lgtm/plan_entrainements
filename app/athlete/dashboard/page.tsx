@@ -315,7 +315,7 @@ export default function AthleteDashboard() {
         
         {/* Course prévue (prioritaire) */}
         {raceOnDate && (
-          <div className="bg-blue-200 p-2 rounded mb-2">
+          <div style={{ backgroundColor: '#BFDBFE' }} className="p-2 rounded mb-2">
             <div className="font-semibold text-sm">
               🏁 {raceOnDate.nom}
             </div>
@@ -325,14 +325,19 @@ export default function AthleteDashboard() {
         
         {/* Séance planifiée (si existe et pas de course) */}
         {!raceOnDate && session && (
-          <div className={`p-2 rounded mb-2 ${
-            session.session_type === 'endurance' ? 'bg-yellow-100' :
-            session.session_type === 'resistance' ? 'bg-orange-200' :
-            session.session_type === 'vitesse' ? 'bg-red-200' :
-            session.session_type === 'vma' ? 'bg-purple-200' :
-            session.session_type === 'course' ? 'bg-blue-200' :
-            'bg-gray-100'
-          }`}>
+          <div
+            className="p-2 rounded mb-2"
+            style={{
+              backgroundColor: (
+                session.session_type === 'endurance' ? '#FEF3C7' :
+                session.session_type === 'resistance' ? '#FED7AA' :
+                session.session_type === 'vitesse' ? '#FECACA' :
+                session.session_type === 'vma' ? '#E9D5FF' :
+                session.session_type === 'course' ? '#BFDBFE' :
+                '#F3F4F6'
+              )
+            }}
+          >
             <div className="font-semibold text-sm">
               {session.session_type}
             </div>

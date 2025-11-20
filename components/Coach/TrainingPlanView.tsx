@@ -176,14 +176,19 @@ export default function TrainingPlanView({ athlete }: { athlete: Athlete }) {
           {session ? (
             <>
               {/* Planifié */}
-              <div className={`p-1 rounded mb-1 text-xs ${
-                session.session_type === 'endurance' ? 'bg-yellow-100' :
-                session.session_type === 'resistance' ? 'bg-orange-200' :
-                session.session_type === 'vitesse' ? 'bg-red-200' :
-                session.session_type === 'vma' ? 'bg-purple-200' :
-                session.session_type === 'course' ? 'bg-blue-200' :
-                'bg-gray-100'
-              }`}>
+              <div
+                className="p-1 rounded mb-1 text-xs"
+                style={{
+                  backgroundColor: (
+                    session.session_type === 'endurance' ? '#FEF3C7' :
+                    session.session_type === 'resistance' ? '#FED7AA' :
+                    session.session_type === 'vitesse' ? '#FECACA' :
+                    session.session_type === 'vma' ? '#E9D5FF' :
+                    session.session_type === 'course' ? '#BFDBFE' :
+                    '#F3F4F6'
+                  )
+                }}
+              >
                 <div className="font-semibold">{session.session_type}</div>
                 {session.description && (
                   <div className="text-xs truncate">{session.description}</div>
@@ -206,7 +211,7 @@ export default function TrainingPlanView({ athlete }: { athlete: Athlete }) {
               )}
             </>
           ) : raceOnDate ? (
-            <div className="bg-blue-200 p-1 rounded text-xs">
+            <div style={{ backgroundColor: '#BFDBFE' }} className="p-1 rounded text-xs">
               <div className="font-semibold">🏁 {raceOnDate.nom}</div>
               <div className="text-xs">{raceOnDate.distance}</div>
             </div>
