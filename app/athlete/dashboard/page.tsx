@@ -122,12 +122,16 @@ export default function AthleteDashboard() {
       const startDate = formatDate(pastWeeks[0]);
       const endDate = formatDate(new Date(futureWeeks[futureWeeks.length - 1].getTime() + 6 * 24 * 60 * 60 * 1000));
 
-      const { data: sessionsData } = await supabase
+      const { data: sessionsData, error: sessionsError } = await supabase
         .from('training_sessions')
         .select('*')
-        .eq('athlete_id', user.id)
+        .eq('athlete_id', profileData.id)
         .gte('date', startDate)
         .lte('date', endDate);
+
+      if (sessionsError) {
+        console.error('Error fetching sessions:', sessionsError);
+      }
 
       if (sessionsData) {
         const sessionsMap: { [date: string]: TrainingSession } = {};
@@ -145,39 +149,63 @@ export default function AthleteDashboard() {
     fetchData();
   }, []);
 
-  async function saveCompletion(date: string) {
+  async function saveCompletion(date: string, isPast: boolean) {
     const session = sessions[date];
-    if (!session?.id) {
-      alert('Aucune séance planifiée pour ce jour. Demandez à votre coach d\'ajouter une séance.');
-      return;
-    }
-
-    const { error } = await supabase
-      .from('training_sessions')
-      .update({
-        is_completed: true,
-        completed_notes: editData.completed_notes,
-        completed_time_minutes: editData.completed_time_minutes ? parseFloat(editData.completed_time_minutes) : null,
-        completed_distance_km: editData.completed_distance_km ? parseFloat(editData.completed_distance_km) : null
-      })
-      .eq('id', session.id);
-
-    if (error) {
-      alert('Erreur lors de la sauvegarde: ' + error.message);
-      console.error('Error saving completion:', error);
-    } else {
-      setSessions(prev => ({
-        ...prev,
-        [date]: {
-          ...prev[date],
+    
+    if (session?.id) {
+      // Update existing session
+      const { error } = await supabase
+        .from('training_sessions')
+        .update({
           is_completed: true,
           completed_notes: editData.completed_notes,
-          completed_time_minutes: editData.completed_time_minutes ? parseFloat(editData.completed_time_minutes) : undefined,
-          completed_distance_km: editData.completed_distance_km ? parseFloat(editData.completed_distance_km) : undefined
-        }
-      }));
-      setEditingCell(null);
-      setEditData({ completed_notes: '', completed_time_minutes: '', completed_distance_km: '' });
+          completed_time_minutes: isPast && editData.completed_time_minutes ? parseFloat(editData.completed_time_minutes) : null,
+          completed_distance_km: isPast && editData.completed_distance_km ? parseFloat(editData.completed_distance_km) : null
+        })
+        .eq('id', session.id);
+
+      if (error) {
+        alert('Erreur lors de la sauvegarde: ' + error.message);
+        console.error('Error saving completion:', error);
+      } else {
+        setSessions(prev => ({
+          ...prev,
+          [date]: {
+            ...prev[date],
+            is_completed: true,
+            completed_notes: editData.completed_notes,
+            completed_time_minutes: isPast && editData.completed_time_minutes ? parseFloat(editData.completed_time_minutes) : undefined,
+            completed_distance_km: isPast && editData.completed_distance_km ? parseFloat(editData.completed_distance_km) : undefined
+          }
+        }));
+        setEditingCell(null);
+        setEditData({ completed_notes: '', completed_time_minutes: '', completed_distance_km: '' });
+      }
+    } else if (profile) {
+      // Create new session (libre, pas planifié par le coach)
+      const { data, error } = await supabase
+        .from('training_sessions')
+        .insert([{
+          athlete_id: profile.id,
+          date,
+          session_type: 'repos',
+          description: 'Séance libre',
+          is_completed: true,
+          completed_notes: editData.completed_notes,
+          completed_time_minutes: isPast && editData.completed_time_minutes ? parseFloat(editData.completed_time_minutes) : null,
+          completed_distance_km: isPast && editData.completed_distance_km ? parseFloat(editData.completed_distance_km) : null
+        }])
+        .select()
+        .single();
+
+      if (error) {
+        alert('Erreur lors de la création: ' + error.message);
+        console.error('Error creating session:', error);
+      } else if (data) {
+        setSessions(prev => ({ ...prev, [date]: data }));
+        setEditingCell(null);
+        setEditData({ completed_notes: '', completed_time_minutes: '', completed_distance_km: '' });
+      }
     }
   }
 
@@ -217,52 +245,50 @@ export default function AthleteDashboard() {
     const dateStr = formatDate(date);
     const session = sessions[dateStr];
     const isEditing = editingCell === dateStr;
-    
-    if (!session) {
-      return (
-        <td key={dateStr} className="border p-2 align-top">
-          <div className="text-xs text-gray-400">{date.getDate()}/{date.getMonth() + 1}</div>
-          <div className="text-xs text-gray-400 mt-2">Aucune séance planifiée</div>
-        </td>
-      );
-    }
-
-    const bgColor = raceOnDate ? SESSION_COLORS.course : SESSION_COLORS[session.session_type];
+    const bgColor = raceOnDate ? SESSION_COLORS.course : (session ? SESSION_COLORS[session.session_type] : SESSION_COLORS.repos);
 
     return (
       <td key={dateStr} className="border p-2 align-top">
         <div className="text-xs text-gray-600 font-semibold mb-2">{date.getDate()}/{date.getMonth() + 1}</div>
         
-        {/* Séance planifiée */}
-        <div className={`${bgColor} p-2 rounded mb-2`}>
-          <div className="font-semibold text-sm">
-            {raceOnDate ? `🏁 ${raceOnDate.nom}` : session.session_type}
+        {/* Séance planifiée (si existe) */}
+        {session && session.description && (
+          <div className={`${bgColor} p-2 rounded mb-2`}>
+            <div className="font-semibold text-sm">
+              {raceOnDate ? `🏁 ${raceOnDate.nom}` : session.session_type}
+            </div>
+            <div className="text-xs mt-1">{session.description}</div>
           </div>
-          <div className="text-xs mt-1">{session.description}</div>
-        </div>
+        )}
 
-        {/* Zone de saisie réalisé */}
+        {/* Zone de saisie / affichage du réalisé */}
         {isEditing ? (
-          <div className="bg-green-50 border-2 border-green-400 p-2 rounded space-y-2">
-            <div className="font-semibold text-xs text-green-800">✓ Marquer comme réalisé</div>
-            <input
-              type="number"
-              step="0.1"
-              placeholder="Temps (min)"
-              value={editData.completed_time_minutes}
-              onChange={(e) => setEditData(prev => ({ ...prev, completed_time_minutes: e.target.value }))}
-              className="w-full text-xs p-1 border rounded"
-            />
-            <input
-              type="number"
-              step="0.1"
-              placeholder="Distance (km)"
-              value={editData.completed_distance_km}
-              onChange={(e) => setEditData(prev => ({ ...prev, completed_distance_km: e.target.value }))}
-              className="w-full text-xs p-1 border rounded"
-            />
+          <div className="bg-blue-50 border-2 border-blue-400 p-2 rounded space-y-2">
+            <div className="font-semibold text-xs text-blue-800">
+              {isPast ? '✓ Ce que j\'ai fait' : '📝 Note / Empêchement'}
+            </div>
+            {isPast && (
+              <>
+                <input
+                  type="number"
+                  step="0.1"
+                  placeholder="Temps (min)"
+                  value={editData.completed_time_minutes}
+                  onChange={(e) => setEditData(prev => ({ ...prev, completed_time_minutes: e.target.value }))}
+                  className="w-full text-xs p-1 border rounded"
+                />
+                <input
+                  type="number"
+                  step="0.1"
+                  placeholder="Distance (km)"
+                  value={editData.completed_distance_km}
+                  onChange={(e) => setEditData(prev => ({ ...prev, completed_distance_km: e.target.value }))}
+                  className="w-full text-xs p-1 border rounded"
+                />
+              </>
+            )}
             <textarea
-              placeholder="Notes..."
+              placeholder={isPast ? "Notes sur la séance..." : "Notes / empêchements..."}
               value={editData.completed_notes}
               onChange={(e) => setEditData(prev => ({ ...prev, completed_notes: e.target.value }))}
               className="w-full text-xs p-1 border rounded"
@@ -270,8 +296,8 @@ export default function AthleteDashboard() {
             />
             <div className="flex gap-1">
               <button
-                onClick={() => saveCompletion(dateStr)}
-                className="flex-1 text-xs bg-green-600 text-white py-1 rounded hover:bg-green-700"
+                onClick={() => saveCompletion(dateStr, isPast)}
+                className="flex-1 text-xs bg-blue-600 text-white py-1 rounded hover:bg-blue-700"
               >
                 Sauvegarder
               </button>
@@ -283,9 +309,11 @@ export default function AthleteDashboard() {
               </button>
             </div>
           </div>
-        ) : session.is_completed ? (
+        ) : (session?.is_completed || session?.completed_notes) ? (
           <div className="bg-green-100 border-2 border-green-400 p-2 rounded">
-            <div className="font-semibold text-xs text-green-800">✓ Réalisé</div>
+            <div className="font-semibold text-xs text-green-800">
+              {isPast ? '✓ Réalisé' : '📝 Note'}
+            </div>
             {session.completed_time_minutes && (
               <div className="text-xs">⏱️ {session.completed_time_minutes} min</div>
             )}
@@ -305,9 +333,9 @@ export default function AthleteDashboard() {
         ) : (
           <button
             onClick={() => startEditing(dateStr)}
-            className="w-full text-xs bg-green-600 text-white py-1 rounded hover:bg-green-700"
+            className="w-full text-xs bg-blue-500 text-white py-1 rounded hover:bg-blue-600"
           >
-            Marquer comme fait
+            {isPast ? '+ Ajouter ce qui a été fait' : '+ Ajouter une note'}
           </button>
         )}
       </td>
