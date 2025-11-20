@@ -407,10 +407,20 @@ export default function AthleteDashboard() {
     </div>
 
       {/* Modale d'édition */}
-      {mounted && editingCell && editingDate && createPortal(
+      {mounted && editingCell && editingDate && document.getElementById('modal-root') && createPortal(
         <div 
           className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4"
-          style={{ zIndex: 9999 }}
+          style={{ 
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 9999,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
           onClick={(e) => {
             if (e.target === e.currentTarget) closeModal();
           }}
@@ -522,7 +532,7 @@ export default function AthleteDashboard() {
             </div>
           </div>
         </div>,
-        document.body
+        document.getElementById('modal-root')!
       )}
     </>
   );
