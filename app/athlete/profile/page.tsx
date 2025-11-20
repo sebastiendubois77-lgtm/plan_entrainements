@@ -22,10 +22,7 @@ export default function AthleteProfile() {
   const [dateNaissance, setDateNaissance] = useState('');
   const [joursDisponibles, setJoursDisponibles] = useState<string[]>([]);
   const [objectif, setObjectif] = useState('');
-  const [courses, setCourses] = useState<Race[]>([]);
   const [entrainementsParSemaine, setEntrainementsParSemaine] = useState(3);
-  
-  const [newRace, setNewRace] = useState<Race>({ nom: '', date: '', distance: '' });
 
   useEffect(() => {
     loadProfile();
@@ -55,7 +52,6 @@ export default function AthleteProfile() {
     setDateNaissance(data.date_naissance || '');
     setJoursDisponibles(data.jours_disponibles || []);
     setObjectif(data.objectif || '');
-    setCourses(data.courses || []);
     setEntrainementsParSemaine(data.entrainements_par_semaine || 3);
     setLoading(false);
   }
@@ -68,44 +64,7 @@ export default function AthleteProfile() {
     }
   }
 
-  async function addRace() {
-    if (!newRace.nom || !newRace.date || !newRace.distance) {
-      alert('Veuillez remplir tous les champs de la course');
-      return;
-    }
-    
-    const updatedCourses = [...courses, newRace];
-    setCourses(updatedCourses);
-    
-    // Sauvegarder immédiatement en DB
-    const { error } = await supabase
-      .from('profiles')
-      .update({ courses: updatedCourses })
-      .eq('id', profile.id);
-    
-    if (error) {
-      alert('Erreur lors de la sauvegarde: ' + error.message);
-      setCourses(courses); // Rollback en cas d'erreur
-    } else {
-      setNewRace({ nom: '', date: '', distance: '' });
-    }
-  }
 
-  async function removeRace(index: number) {
-    const updatedCourses = courses.filter((_, i) => i !== index);
-    setCourses(updatedCourses);
-    
-    // Sauvegarder immédiatement en DB
-    const { error } = await supabase
-      .from('profiles')
-      .update({ courses: updatedCourses })
-      .eq('id', profile.id);
-    
-    if (error) {
-      alert('Erreur lors de la suppression: ' + error.message);
-      setCourses(courses); // Rollback en cas d'erreur
-    }
-  }
 
   async function handlePhotoUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -179,7 +138,6 @@ export default function AthleteProfile() {
         date_naissance: dateNaissance || null,
         jours_disponibles: joursDisponibles,
         objectif: objectif || null,
-        courses: courses,
         entrainements_par_semaine: entrainementsParSemaine
       })
       .eq('id', profile.id);
@@ -298,62 +256,7 @@ export default function AthleteProfile() {
           />
         </div>
 
-        {/* Courses à venir */}
-        <div>
-          <label className="block text-sm font-medium mb-2">Courses prévues</label>
-          
-          {courses.length > 0 && (
-            <div className="mb-4 space-y-2">
-              {courses.map((race, idx) => (
-                <div key={idx} className="flex items-center justify-between p-3 bg-gray-50 rounded">
-                  <div>
-                    <div className="font-semibold">{race.nom}</div>
-                    <div className="text-sm text-gray-600">
-                      {new Date(race.date).toLocaleDateString('fr-FR')} • {race.distance}
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => removeRace(idx)}
-                    className="text-red-600 hover:text-red-800"
-                  >
-                    ✕
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
-            <input
-              type="text"
-              placeholder="Nom de la course"
-              value={newRace.nom}
-              onChange={e => setNewRace({ ...newRace, nom: e.target.value })}
-              className="p-2 border rounded"
-            />
-            <input
-              type="date"
-              value={newRace.date}
-              onChange={e => setNewRace({ ...newRace, date: e.target.value })}
-              className="p-2 border rounded"
-            />
-            <input
-              type="text"
-              placeholder="Distance (ex: 10km)"
-              value={newRace.distance}
-              onChange={e => setNewRace({ ...newRace, distance: e.target.value })}
-              className="p-2 border rounded"
-            />
-            <button
-              type="button"
-              onClick={addRace}
-              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-            >
-              Ajouter
-            </button>
-          </div>
-        </div>
 
         {/* Buttons */}
         <div className="flex gap-4">

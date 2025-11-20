@@ -177,12 +177,12 @@ export default function TrainingPlanView({ athlete }: { athlete: Athlete }) {
           {session ? (
             <>
               {/* Planifié */}
-              {session.description && (
-                <div className={`${bgColor} p-1 rounded mb-1 text-xs`}>
-                  <div className="font-semibold">{session.session_type}</div>
+              <div className={`${bgColor} p-1 rounded mb-1 text-xs`}>
+                <div className="font-semibold">{session.session_type}</div>
+                {session.description && (
                   <div className="text-xs truncate">{session.description}</div>
-                </div>
-              )}
+                )}
+              </div>
               {/* Réalisé */}
               {session.is_completed && (
                 <div className="bg-green-100 p-1 rounded text-xs border-2 border-green-400">

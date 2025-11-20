@@ -325,12 +325,14 @@ export default function AthleteDashboard() {
         )}
         
         {/* Séance planifiée (si existe et pas de course) */}
-        {!raceOnDate && session && session.description && (
+        {!raceOnDate && session && (
           <div className={`${bgColor} p-2 rounded mb-2`}>
             <div className="font-semibold text-sm">
               {session.session_type}
             </div>
-            <div className="text-xs mt-1">{session.description}</div>
+            {session.description && (
+              <div className="text-xs mt-1">{session.description}</div>
+            )}
           </div>
         )}
 
