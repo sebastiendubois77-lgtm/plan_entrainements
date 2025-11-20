@@ -396,46 +396,55 @@ export default function AthleteDashboard() {
   return (
     <>
       <div className="p-8 max-w-7xl mx-auto">
-      {/* En-tête : objectif centré (discret et lisible) */}
-      <div className="mb-4">
-        <div className="bg-white rounded-lg shadow-sm p-6">
+      {/* Header: large centered objective with courses list in top-right */}
+      <div className="mb-6 relative">
+        <div className="bg-white rounded-lg shadow-sm p-8">
           <div className="text-center">
             {profile.objectif ? (
-              <div className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight">
-                🎯 {profile.objectif}
-              </div>
+              <h1 className="mx-auto text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight">🎯 {profile.objectif}</h1>
             ) : (
               <div className="text-lg text-gray-600">Aucun objectif défini</div>
             )}
           </div>
         </div>
-      </div>
 
-      {/* Courses programmées sur une ligne */}
-      <div className="mb-6">
-        <div className="flex items-center gap-4">
-          <div className="font-semibold">🏁 Courses programmées</div>
-          <div className="flex-1 flex flex-wrap gap-2">
-            {profile.courses && profile.courses.length > 0 ? (
-              [...profile.courses]
-                .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-                .map((race: Race, idx: number) => (
-                  <div key={idx} className="px-3 py-2 bg-blue-50 text-blue-800 rounded-full text-sm flex items-center gap-2">
-                    <span className="text-xs text-gray-500">{new Date(race.date).toLocaleDateString('fr-FR')}</span>
-                    <span className="font-medium">{race.nom}</span>
-                    <span className="text-xs text-gray-600">{race.distance} km</span>
-                  </div>
-                ))
-            ) : (
-              <div className="text-sm text-gray-500 italic">Aucune course programmée</div>
-            )}
+        {/* Courses list positioned top-right */}
+        <div style={{ right: 0, top: 0 }} className="absolute lg:static lg:mt-0 lg:ml-4 lg:right-0 lg:top-0">
+          <div className="w-64 lg:w-72 bg-white rounded-lg shadow p-3">
+            <div className="flex items-center justify-between mb-2">
+              <div className="font-semibold text-sm">🏁 Courses programmées</div>
+              <button
+                onClick={() => setShowRaceModal(true)}
+                className="text-xs bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700"
+              >
+                +
+              </button>
+            </div>
+            <div className="space-y-2 max-h-40 overflow-y-auto">
+              {profile.courses && profile.courses.length > 0 ? (
+                [...profile.courses]
+                  .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+                  .map((race: Race, idx: number) => (
+                    <div key={idx} className="flex items-start justify-between bg-blue-50 p-2 rounded">
+                      <div className="text-xs text-gray-600">{new Date(race.date).toLocaleDateString('fr-FR')}</div>
+                      <div className="ml-3 flex-1">
+                        <div className="font-medium text-sm">{race.nom}</div>
+                        <div className="text-xs text-gray-600">{race.distance} km</div>
+                      </div>
+                      <button
+                        onClick={() => setRaceToDelete(profile.courses!.indexOf(race))}
+                        className="text-red-600 hover:text-red-800 ml-2"
+                        aria-label={`Supprimer ${race.nom}`}
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))
+              ) : (
+                <div className="text-sm text-gray-500 italic">Aucune course</div>
+              )}
+            </div>
           </div>
-          <button
-            onClick={() => setShowRaceModal(true)}
-            className="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
-          >
-            + Ajouter
-          </button>
         </div>
       </div>
 
