@@ -16,7 +16,7 @@ export default function CoachDashboard() {
     
     const { data, error } = await supabase
       .from('profiles')
-      .select('id, full_name, email, photo_url, objectif, courses')
+      .select('id, full_name, email, photo_url, objectif, courses, entrainements_par_semaine, jours_disponibles')
       .eq('role', 'athlete');
       
     if (!error && data) {
@@ -67,17 +67,40 @@ export default function CoachDashboard() {
         {/* Liste des athlètes */}
         <div className="space-y-2 mb-6">
           {athletes.map(athlete => (
-            <button
-              key={athlete.id}
-              onClick={() => setSelectedAthleteId(athlete.id)}
-              className={`w-full text-left p-3 rounded transition ${
-                selectedAthleteId === athlete.id
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-white hover:bg-gray-50'
-              }`}
-            >
-              <div className="font-medium">{athlete.full_name || athlete.email}</div>
-            </button>
+            <div key={athlete.id} className={`flex items-center justify-between p-2 rounded transition ${selectedAthleteId === athlete.id ? 'bg-blue-500 text-white' : 'bg-white hover:bg-gray-50'}`}>
+              <button
+                onClick={() => setSelectedAthleteId(athlete.id)}
+                className="text-left flex-1 p-2"
+              >
+                <div className="font-medium">{athlete.full_name || athlete.email}</div>
+                {athlete.objectif && <div className="text-xs text-gray-500">{athlete.objectif}</div>}
+              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={async () => {
+                    if (!confirm(`Supprimer ${athlete.full_name || athlete.email} ? Cette action est irréversible.`)) return;
+                    try {
+                      const res = await fetch('/api/delete-athlete', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ profileId: athlete.id })
+                      });
+                      const json = await res.json();
+                      if (!res.ok) throw new Error(json.error || 'Erreur');
+                      // refresh list
+                      fetchAthletes();
+                      if (selectedAthleteId === athlete.id) setSelectedAthleteId(null);
+                    } catch (err: any) {
+                      alert('Impossible de supprimer: ' + (err.message || String(err)));
+                    }
+                  }}
+                  title="Supprimer"
+                  className="text-red-600 hover:text-red-800 p-2 rounded"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
           ))}
         </div>
 

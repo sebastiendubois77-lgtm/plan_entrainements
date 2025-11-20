@@ -30,6 +30,12 @@ interface Athlete {
   courses?: Race[];
 }
 
+// Extended athlete fields
+interface AthleteExtended extends Athlete {
+  entrainements_par_semaine?: number;
+  jours_disponibles?: string[];
+}
+
 const SESSION_COLORS = {
   repos: 'bg-gray-100',
   endurance: 'bg-yellow-100',
@@ -68,7 +74,7 @@ function getWeekLabel(weekStart: Date): string {
   return `${weekStart.getDate()}/${weekStart.getMonth() + 1} - ${end.getDate()}/${end.getMonth() + 1}`;
 }
 
-export default function TrainingPlanView({ athlete }: { athlete: Athlete }) {
+export default function TrainingPlanView({ athlete }: { athlete: AthleteExtended }) {
   const [sessions, setSessions] = useState<{ [date: string]: TrainingSession }>({});
   const [loading, setLoading] = useState(true);
   const [editingCell, setEditingCell] = useState<string | null>(null);
@@ -223,6 +229,9 @@ export default function TrainingPlanView({ athlete }: { athlete: Athlete }) {
     }
 
     // Futur : éditable
+    const dayName = DAYS[date.getDay() === 0 ? 6 : date.getDay() - 1]; // map JS Sunday=0 to our DAYS index
+    const isAvailable = athlete.jours_disponibles ? athlete.jours_disponibles.includes(dayName) : false;
+
     return (
       <td key={dateStr} className="border p-2 align-top">
         <div className="text-xs text-gray-600 mb-1">{date.getDate()}/{date.getMonth() + 1}</div>
@@ -303,9 +312,10 @@ export default function TrainingPlanView({ athlete }: { athlete: Athlete }) {
               }));
               setEditingCell(dateStr);
             }}
-            className="bg-gray-50 p-2 rounded cursor-pointer hover:bg-gray-100 min-h-[60px] border-2 border-dashed border-gray-300 flex items-center justify-center"
+            className={`p-2 rounded cursor-pointer hover:opacity-90 min-h-[60px] border-2 ${isAvailable ? 'border-green-300 bg-green-50' : 'border-dashed border-gray-300 bg-gray-50'} flex items-center justify-center`}
+            title={isAvailable ? 'Jour disponible (préféré)' : 'Jour non indiqué comme disponible'}
           >
-            <div className="text-xs text-gray-400">+ Ajouter séance</div>
+            <div className={`text-xs ${isAvailable ? 'text-green-800' : 'text-gray-400'}`}>{isAvailable ? '+ Ajouter séance (jour disponible)' : '+ Ajouter séance'}</div>
           </div>
         ) : null}
       </td>
@@ -335,12 +345,15 @@ export default function TrainingPlanView({ athlete }: { athlete: Athlete }) {
                 className="w-24 h-24 rounded-full object-cover"
               />
             )}
-            <div className="flex-1">
+              <div className="flex-1">
               <h1 className="text-2xl font-bold mb-2">{athlete.full_name || athlete.email}</h1>
               {athlete.objectif && (
                 <p className="text-gray-700">
                   <span className="font-semibold">Objectif :</span> {athlete.objectif}
                 </p>
+              )}
+              {typeof athlete.entrainements_par_semaine !== 'undefined' && (
+                <p className="text-gray-600 text-sm mt-1">Souhaite <span className="font-semibold">{athlete.entrainements_par_semaine}</span> séance{(athlete.entrainements_par_semaine || 0) > 1 ? 's' : ''} / semaine</p>
               )}
             </div>
           </div>
