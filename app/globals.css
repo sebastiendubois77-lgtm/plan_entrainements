@@ -5,8 +5,3 @@
 html, body, #__next { height: 100%; }
 /* Use direct colors to avoid @apply issues during build */
 body { background-color: #f8fafc; color: #1f2937; }
-
-/* Force Tailwind to include these classes in the build */
-.safelist-colors {
-  @apply bg-yellow-100 bg-orange-200 bg-red-200 bg-purple-200 bg-blue-200 bg-gray-100;
-}
