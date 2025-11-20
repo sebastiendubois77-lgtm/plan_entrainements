@@ -1,5 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { supabase } from '../../../lib/supabaseClient';
 import { useRouter } from 'next/navigation';
 
@@ -79,6 +80,11 @@ export default function AthleteDashboard() {
     completed_time_minutes: string;
     completed_distance_km: string;
   }>({ completed_notes: '', completed_time_minutes: '', completed_distance_km: '' });
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Calculer les semaines
   const today = new Date();
@@ -401,9 +407,18 @@ export default function AthleteDashboard() {
     </div>
 
       {/* Modale d'édition */}
-      {editingCell && editingDate && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      {mounted && editingCell && editingDate && createPortal(
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4"
+          style={{ zIndex: 9999 }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) closeModal();
+          }}
+        >
+          <div 
+            className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="p-6">
               {/* En-tête */}
               <div className="flex items-center justify-between mb-4 pb-4 border-b">
@@ -506,7 +521,8 @@ export default function AthleteDashboard() {
               </div>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );
