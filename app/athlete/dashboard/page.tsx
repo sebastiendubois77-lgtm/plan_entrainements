@@ -409,7 +409,6 @@ export default function AthleteDashboard() {
       {/* Modale d'édition */}
       {mounted && editingCell && editingDate && document.getElementById('modal-root') && createPortal(
         <div 
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4"
           style={{ 
             position: 'fixed',
             top: 0,
@@ -417,16 +416,26 @@ export default function AthleteDashboard() {
             right: 0,
             bottom: 0,
             zIndex: 9999,
+            backgroundColor: 'rgba(0, 0, 0, 0.75)',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            padding: '1rem'
           }}
           onClick={(e) => {
             if (e.target === e.currentTarget) closeModal();
           }}
         >
           <div 
-            className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+            style={{
+              backgroundColor: 'white',
+              borderRadius: '0.5rem',
+              boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+              maxWidth: '48rem',
+              width: '100%',
+              maxHeight: '90vh',
+              overflowY: 'auto'
+            }}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="p-6">
