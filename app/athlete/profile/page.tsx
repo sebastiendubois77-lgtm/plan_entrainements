@@ -68,17 +68,43 @@ export default function AthleteProfile() {
     }
   }
 
-  function addRace() {
+  async function addRace() {
     if (!newRace.nom || !newRace.date || !newRace.distance) {
       alert('Veuillez remplir tous les champs de la course');
       return;
     }
-    setCourses([...courses, newRace]);
-    setNewRace({ nom: '', date: '', distance: '' });
+    
+    const updatedCourses = [...courses, newRace];
+    setCourses(updatedCourses);
+    
+    // Sauvegarder immédiatement en DB
+    const { error } = await supabase
+      .from('profiles')
+      .update({ courses: updatedCourses })
+      .eq('id', profile.id);
+    
+    if (error) {
+      alert('Erreur lors de la sauvegarde: ' + error.message);
+      setCourses(courses); // Rollback en cas d'erreur
+    } else {
+      setNewRace({ nom: '', date: '', distance: '' });
+    }
   }
 
-  function removeRace(index: number) {
-    setCourses(courses.filter((_, i) => i !== index));
+  async function removeRace(index: number) {
+    const updatedCourses = courses.filter((_, i) => i !== index);
+    setCourses(updatedCourses);
+    
+    // Sauvegarder immédiatement en DB
+    const { error } = await supabase
+      .from('profiles')
+      .update({ courses: updatedCourses })
+      .eq('id', profile.id);
+    
+    if (error) {
+      alert('Erreur lors de la suppression: ' + error.message);
+      setCourses(courses); // Rollback en cas d'erreur
+    }
   }
 
   async function handlePhotoUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -179,7 +205,15 @@ export default function AthleteProfile() {
 
   return (
     <div className="max-w-3xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">Mon profil</h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-3xl font-bold">Mon profil</h1>
+        <button
+          onClick={() => router.push('/athlete/dashboard')}
+          className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+        >
+          ← Retour au plan
+        </button>
+      </div>
 
       <form onSubmit={handleSave} className="space-y-6">
         {/* Photo */}

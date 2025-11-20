@@ -81,6 +81,11 @@ export default function AthleteDashboard() {
     completed_distance_km: string;
   }>({ completed_notes: '', completed_time_minutes: '', completed_distance_km: '' });
   const [mounted, setMounted] = useState(false);
+  
+  // Gestion des courses
+  const [showRaceModal, setShowRaceModal] = useState(false);
+  const [raceToDelete, setRaceToDelete] = useState<number | null>(null);
+  const [newRace, setNewRace] = useState<Race>({ nom: '', date: '', distance: '' });
 
   useEffect(() => {
     setMounted(true);
@@ -236,6 +241,46 @@ export default function AthleteDashboard() {
     return profile?.courses?.find((r: Race) => r.date === dateStr);
   }
 
+  async function addRace() {
+    if (!newRace.nom || !newRace.date || !newRace.distance || !profile) {
+      alert('Veuillez remplir tous les champs de la course');
+      return;
+    }
+    
+    const updatedCourses = [...(profile.courses || []), newRace];
+    
+    const { error } = await supabase
+      .from('profiles')
+      .update({ courses: updatedCourses })
+      .eq('id', profile.id);
+    
+    if (error) {
+      alert('Erreur lors de la sauvegarde: ' + error.message);
+    } else {
+      setProfile({ ...profile, courses: updatedCourses });
+      setNewRace({ nom: '', date: '', distance: '' });
+      setShowRaceModal(false);
+    }
+  }
+
+  async function confirmDeleteRace() {
+    if (raceToDelete === null || !profile) return;
+    
+    const updatedCourses = profile.courses?.filter((_, i) => i !== raceToDelete) || [];
+    
+    const { error } = await supabase
+      .from('profiles')
+      .update({ courses: updatedCourses })
+      .eq('id', profile.id);
+    
+    if (error) {
+      alert('Erreur lors de la suppression: ' + error.message);
+    } else {
+      setProfile({ ...profile, courses: updatedCourses });
+      setRaceToDelete(null);
+    }
+  }
+
   function getWeekStats(weekStart: Date) {
     const weekDates = getWeekDates(weekStart);
     let totalTime = 0;
@@ -269,11 +314,21 @@ export default function AthleteDashboard() {
       <td key={dateStr} className="border p-2 align-top">
         <div className="text-xs text-gray-600 font-semibold mb-2">{date.getDate()}/{date.getMonth() + 1}</div>
         
-        {/* Séance planifiée (si existe) */}
-        {session && session.description && (
+        {/* Course prévue (prioritaire) */}
+        {raceOnDate && (
+          <div className={`${SESSION_COLORS.course} p-2 rounded mb-2`}>
+            <div className="font-semibold text-sm">
+              🏁 {raceOnDate.nom}
+            </div>
+            <div className="text-xs mt-1">{raceOnDate.distance}</div>
+          </div>
+        )}
+        
+        {/* Séance planifiée (si existe et pas de course) */}
+        {!raceOnDate && session && session.description && (
           <div className={`${bgColor} p-2 rounded mb-2`}>
             <div className="font-semibold text-sm">
-              {raceOnDate ? `🏁 ${raceOnDate.nom}` : session.session_type}
+              {session.session_type}
             </div>
             <div className="text-xs mt-1">{session.description}</div>
           </div>
@@ -335,20 +390,47 @@ export default function AthleteDashboard() {
               </div>
             )}
           </div>
-          <div>
-            {profile.courses && profile.courses.length > 0 && (
-              <div className="bg-blue-50 p-4 rounded">
-                <div className="font-bold text-sm mb-2">🏁 Courses prévues</div>
-                {profile.courses.map((race: Race, idx: number) => (
-                  <div key={idx} className="text-sm mb-1">
-                    <span className="font-semibold">{race.nom}</span> - {race.distance} 
-                    <span className="text-gray-600 ml-2">
-                      ({new Date(race.date).toLocaleDateString('fr-FR')})
-                    </span>
-                  </div>
-                ))}
+          <div className="flex-1">
+            <div className="bg-blue-50 p-4 rounded">
+              <div className="flex items-center justify-between mb-3">
+                <div className="font-bold text-sm">🏁 Courses prévues</div>
+                <button
+                  onClick={() => setShowRaceModal(true)}
+                  className="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+                >
+                  + Ajouter
+                </button>
               </div>
-            )}
+              {profile.courses && profile.courses.length > 0 ? (
+                <div className="space-y-2">
+                  {[...profile.courses]
+                    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+                    .map((race: Race, idx: number) => {
+                      const originalIdx = profile.courses!.indexOf(race);
+                      return (
+                        <div key={idx} className="flex items-center justify-between bg-white p-2 rounded">
+                          <div className="text-sm">
+                            <span className="font-semibold">{race.nom}</span>
+                            <span className="text-gray-600 mx-2">•</span>
+                            {race.distance}
+                            <span className="text-gray-600 ml-2">
+                              ({new Date(race.date).toLocaleDateString('fr-FR')})
+                            </span>
+                          </div>
+                          <button
+                            onClick={() => setRaceToDelete(originalIdx)}
+                            className="text-red-600 hover:text-red-800 text-lg"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      );
+                    })}
+                </div>
+              ) : (
+                <div className="text-sm text-gray-500 italic">Aucune course prévue</div>
+              )}
+            </div>
           </div>
         </div>
         <div className="mt-4">
@@ -536,6 +618,168 @@ export default function AthleteDashboard() {
                   className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
                 >
                   Enregistrer
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>,
+        document.getElementById('modal-root')!
+      )}
+
+      {/* Modale d'ajout de course */}
+      {mounted && showRaceModal && document.getElementById('modal-root') && createPortal(
+        <div 
+          style={{ 
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 9999,
+            backgroundColor: 'rgba(0, 0, 0, 0.75)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '1rem'
+          }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowRaceModal(false);
+          }}
+        >
+          <div 
+            style={{
+              backgroundColor: 'white',
+              borderRadius: '0.5rem',
+              boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+              maxWidth: '32rem',
+              width: '100%'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-4 pb-4 border-b">
+                <h2 className="text-xl font-bold">🏁 Ajouter une course</h2>
+                <button
+                  onClick={() => setShowRaceModal(false)}
+                  className="text-gray-400 hover:text-gray-600 text-2xl"
+                >
+                  ×
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Nom de la course
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Ex: Marathon de Paris"
+                    value={newRace.nom}
+                    onChange={(e) => setNewRace({ ...newRace, nom: e.target.value })}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Date
+                  </label>
+                  <input
+                    type="date"
+                    value={newRace.date}
+                    onChange={(e) => setNewRace({ ...newRace, date: e.target.value })}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Distance
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Ex: 10km, Semi-marathon, Marathon"
+                    value={newRace.distance}
+                    onChange={(e) => setNewRace({ ...newRace, distance: e.target.value })}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+              </div>
+
+              <div className="flex gap-3 mt-6 pt-4 border-t">
+                <button
+                  onClick={() => setShowRaceModal(false)}
+                  className="flex-1 px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-medium"
+                >
+                  Annuler
+                </button>
+                <button
+                  onClick={addRace}
+                  className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
+                >
+                  Ajouter
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>,
+        document.getElementById('modal-root')!
+      )}
+
+      {/* Modale de confirmation de suppression */}
+      {mounted && raceToDelete !== null && document.getElementById('modal-root') && createPortal(
+        <div 
+          style={{ 
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 9999,
+            backgroundColor: 'rgba(0, 0, 0, 0.75)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '1rem'
+          }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setRaceToDelete(null);
+          }}
+        >
+          <div 
+            style={{
+              backgroundColor: 'white',
+              borderRadius: '0.5rem',
+              boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+              maxWidth: '28rem',
+              width: '100%'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-6">
+              <div className="mb-4">
+                <h2 className="text-xl font-bold text-red-600 mb-2">⚠️ Confirmer la suppression</h2>
+                <p className="text-gray-700">
+                  Êtes-vous sûr de vouloir supprimer cette course ?
+                  {profile?.courses?.[raceToDelete] && (
+                    <span className="block mt-2 font-semibold">
+                      {profile.courses[raceToDelete].nom} - {profile.courses[raceToDelete].distance}
+                    </span>
+                  )}
+                </p>
+              </div>
+
+              <div className="flex gap-3 mt-6">
+                <button
+                  onClick={() => setRaceToDelete(null)}
+                  className="flex-1 px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-medium"
+                >
+                  Annuler
+                </button>
+                <button
+                  onClick={confirmDeleteRace}
+                  className="flex-1 px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium"
+                >
+                  Supprimer
                 </button>
               </div>
             </div>
