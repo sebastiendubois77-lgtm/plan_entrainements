@@ -222,7 +222,7 @@ export default function AthleteDashboard() {
       return (
         <td key={dateStr} className="border p-2 align-top">
           <div className="text-xs text-gray-400">{date.getDate()}/{date.getMonth() + 1}</div>
-          <div className="text-xs text-gray-400 mt-2">Aucune séance</div>
+          <div className="text-xs text-gray-400 mt-2">Aucune séance planifiée</div>
         </td>
       );
     }

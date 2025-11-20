@@ -165,34 +165,30 @@ export default function TrainingPlanView({ athlete }: { athlete: Athlete }) {
     const dateStr = formatDate(date);
     const session = sessions[dateStr];
     const isEditing = editingCell === dateStr;
-    
-    if (!session && !raceOnDate) {
-      return (
-        <td key={dateStr} className="border p-2 align-top">
-          <div className="text-xs text-gray-400">{date.getDate()}/{date.getMonth() + 1}</div>
-          <div className="text-xs text-gray-400 mt-2">Repos</div>
-        </td>
-      );
-    }
-    
     const bgColor = raceOnDate ? SESSION_COLORS.course : (session ? SESSION_COLORS[session.session_type] : SESSION_COLORS.repos);
 
-    if (isPast && !isEditing) {
-      // Historique : afficher planifié + réalisé
+    if (isPast) {
+      // Historique : afficher planifié + réalisé (non éditable)
       return (
         <td key={dateStr} className="border p-2 align-top">
           <div className="text-xs text-gray-600 mb-1">{date.getDate()}/{date.getMonth() + 1}</div>
-          {/* Planifié */}
-          <div className={`${bgColor} p-1 rounded mb-1 text-xs`}>
-            <div className="font-semibold">{session.session_type}</div>
-            <div className="text-xs truncate">{session.description}</div>
-          </div>
-          {/* Réalisé */}
-          {session.is_completed && (
-            <div className="bg-green-100 p-1 rounded text-xs border-2 border-green-400">
-              <div className="font-semibold">✓ Réalisé</div>
-              <div className="text-xs truncate">{session.completed_notes}</div>
-            </div>
+          {session ? (
+            <>
+              {/* Planifié */}
+              <div className={`${bgColor} p-1 rounded mb-1 text-xs`}>
+                <div className="font-semibold">{session.session_type}</div>
+                <div className="text-xs truncate">{session.description}</div>
+              </div>
+              {/* Réalisé */}
+              {session.is_completed && (
+                <div className="bg-green-100 p-1 rounded text-xs border-2 border-green-400">
+                  <div className="font-semibold">✓ Réalisé</div>
+                  <div className="text-xs truncate">{session.completed_notes}</div>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="text-xs text-gray-400">Repos</div>
           )}
         </td>
       );
