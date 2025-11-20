@@ -16,7 +16,7 @@ export default function CoachDashboard() {
     
     const { data, error } = await supabase
       .from('profiles')
-      .select('id, full_name, email, photo_url, objectif')
+      .select('id, full_name, email, photo_url, objectif, courses')
       .eq('role', 'athlete')
       .eq('coach_user_id', user.id);
       

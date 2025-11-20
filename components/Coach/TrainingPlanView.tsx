@@ -11,6 +11,8 @@ interface TrainingSession {
   description: string;
   is_completed?: boolean;
   completed_notes?: string;
+  completed_time_minutes?: number;
+  completed_distance_km?: number;
 }
 
 interface Race {
@@ -183,10 +185,23 @@ export default function TrainingPlanView({ athlete }: { athlete: Athlete }) {
               {session.is_completed && (
                 <div className="bg-green-100 p-1 rounded text-xs border-2 border-green-400">
                   <div className="font-semibold">✓ Réalisé</div>
-                  <div className="text-xs truncate">{session.completed_notes}</div>
+                  {session.completed_time_minutes && (
+                    <div className="text-xs">⏱️ {session.completed_time_minutes} min</div>
+                  )}
+                  {session.completed_distance_km && (
+                    <div className="text-xs">📏 {session.completed_distance_km} km</div>
+                  )}
+                  {session.completed_notes && (
+                    <div className="text-xs truncate">{session.completed_notes}</div>
+                  )}
                 </div>
               )}
             </>
+          ) : raceOnDate ? (
+            <div className="bg-blue-300 p-1 rounded text-xs">
+              <div className="font-semibold">🏁 {raceOnDate.nom}</div>
+              <div className="text-xs">{raceOnDate.distance}</div>
+            </div>
           ) : (
             <div className="text-xs text-gray-400">Repos</div>
           )}
