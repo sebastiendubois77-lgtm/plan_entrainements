@@ -10,8 +10,11 @@ type Body = {
 
 export async function POST(req: Request) {
   try {
-    const body: Body = await req.json();
-    const { name, email, coachId } = body;
+    const body: any = await req.json();
+    // Accept multiple possible field names from different callers
+    const name = body.name || body.full_name || body.fullName;
+    const email = body.email || body.email_address;
+    const coachId = body.coachId || body.coach_user_id || body.coach_userId || body.coachId;
     // Generate a temporary password that will be replaced when athlete sets their own
     let password = crypto.randomBytes(16).toString('hex');
 
