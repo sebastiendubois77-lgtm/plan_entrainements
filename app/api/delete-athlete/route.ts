@@ -50,8 +50,13 @@ export async function POST(req: Request) {
       }
     });
 
-    const delJson = await delRes.json();
-    if (!delRes.ok) return NextResponse.json({ error: delJson }, { status: 500 });
+    if (!delRes.ok) {
+      let delError = { message: 'Unknown error' };
+      try {
+        delError = await delRes.json();
+      } catch {}
+      return NextResponse.json({ error: delError }, { status: 500 });
+    }
 
     return NextResponse.json({ success: true });
   } catch (err: any) {

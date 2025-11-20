@@ -184,8 +184,15 @@ export default function CoachDashboard() {
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ profileId: athleteToDelete.id })
                       });
-                      const json = await res.json();
-                      if (!res.ok) throw new Error(json.error || 'Erreur');
+                      
+                      let json = null;
+                      const contentType = res.headers.get('content-type');
+                      if (contentType && contentType.includes('application/json')) {
+                        json = await res.json();
+                      }
+                      
+                      if (!res.ok) throw new Error(json?.error || 'Erreur lors de la suppression');
+                      
                       fetchAthletes();
                       if (selectedAthleteId === athleteToDelete.id) setSelectedAthleteId(null);
                       setAthleteToDelete(null);
