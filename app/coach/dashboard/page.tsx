@@ -60,9 +60,9 @@ export default function CoachDashboard() {
   const selectedAthlete = athletes.find(a => a.id === selectedAthleteId);
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen gap-6">
       {/* Sidebar */}
-      <div className="w-56 bg-gray-100 p-3 overflow-y-auto">
+      <div className="w-56 bg-gray-100 p-3 overflow-y-auto min-w-0 pr-6">
         <h2 className="text-lg font-bold mb-4">Mes athlètes</h2>
         
         {/* Liste des athlètes */}
@@ -115,7 +115,7 @@ export default function CoachDashboard() {
       </div>
 
       {/* Zone principale */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto min-w-0">
         {selectedAthlete ? (
           <TrainingPlanView athlete={selectedAthlete} />
         ) : (
@@ -156,57 +156,55 @@ export default function CoachDashboard() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="p-6">
-              <div className="mb-4">
-                <h2 className="text-xl font-bold text-red-600 mb-2">⚠️ Confirmer la suppression</h2>
-                <p className="text-gray-700">
-                  Êtes-vous sûr de vouloir supprimer cet athlète ?
-                  <span className="block mt-2 font-semibold">
-                    {athleteToDelete.full_name || athleteToDelete.email}
-                  </span>
-                </p>
-                <p className="text-sm text-gray-500 mt-2">
-                  Cette action est irréversible et supprimera toutes les données associées.
-                </p>
-              </div>
+                <div className="mb-4">
+                  <h2 className="text-xl font-bold text-red-600 mb-2">⚠️ Confirmer la suppression</h2>
+                  <p className="text-gray-700">
+                    Êtes-vous sûr de vouloir supprimer cet athlète ?
+                    <span className="block mt-2 font-semibold">
+                      {athleteToDelete.full_name || athleteToDelete.email}
+                    </span>
+                  </p>
+                  <p className="text-sm text-gray-500 mt-2">Cette action est irréversible et supprimera toutes les données associées.</p>
+                </div>
 
-              <div className="flex gap-3 mt-6">
-                <button
-                  onClick={() => setAthleteToDelete(null)}
-                  className="flex-1 px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-medium"
-                >
-                  Annuler
-                </button>
-                <button
-                  onClick={async () => {
-                    try {
-                      const res = await fetch('/api/delete-athlete', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ profileId: athleteToDelete.id })
-                      });
-                      
-                      let json = null;
-                      const contentType = res.headers.get('content-type');
-                      if (contentType && contentType.includes('application/json')) {
-                        json = await res.json();
+                <div className="flex gap-3 mt-6">
+                  <button
+                    onClick={() => setAthleteToDelete(null)}
+                    className="flex-1 px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-medium"
+                  >
+                    Annuler
+                  </button>
+                  <button
+                    onClick={async () => {
+                      try {
+                        const res = await fetch('/api/delete-athlete', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ profileId: athleteToDelete.id })
+                        });
+
+                        let json = null;
+                        const contentType = res.headers.get('content-type');
+                        if (contentType && contentType.includes('application/json')) {
+                          json = await res.json();
+                        }
+
+                        if (!res.ok) throw new Error(json?.error || 'Erreur lors de la suppression');
+
+                        fetchAthletes();
+                        if (selectedAthleteId === athleteToDelete.id) setSelectedAthleteId(null);
+                        setAthleteToDelete(null);
+                      } catch (err: any) {
+                        alert('Impossible de supprimer: ' + (err.message || String(err)));
+                        setAthleteToDelete(null);
                       }
-                      
-                      if (!res.ok) throw new Error(json?.error || 'Erreur lors de la suppression');
-                      
-                      fetchAthletes();
-                      if (selectedAthleteId === athleteToDelete.id) setSelectedAthleteId(null);
-                      setAthleteToDelete(null);
-                    } catch (err: any) {
-                      alert('Impossible de supprimer: ' + (err.message || String(err)));
-                      setAthleteToDelete(null);
-                    }
-                  }}
-                  className="flex-1 px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium"
-                >
-                  Supprimer
-                </button>
+                    }}
+                    className="flex-1 px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium"
+                  >
+                    Supprimer
+                  </button>
+                </div>
               </div>
-            </div>
           </div>
         </div>
       )}
