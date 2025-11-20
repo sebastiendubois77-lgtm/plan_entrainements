@@ -302,21 +302,52 @@ export default function TrainingPlanView({ athlete }: { athlete: Athlete }) {
   return (
     <div className="p-6">
       {/* En-tête athlète */}
-      <div className="bg-white rounded-lg shadow p-6 mb-6 flex items-start gap-4">
-        {athlete.photo_url && (
-          <img
-            src={athlete.photo_url}
-            alt={athlete.full_name}
-            className="w-24 h-24 rounded-full object-cover"
-          />
-        )}
-        <div className="flex-1">
-          <h1 className="text-2xl font-bold mb-2">{athlete.full_name || athlete.email}</h1>
-          {athlete.objectif && (
-            <p className="text-gray-700">
-              <span className="font-semibold">Objectif :</span> {athlete.objectif}
-            </p>
-          )}
+      <div className="bg-white rounded-lg shadow p-6 mb-6">
+        <div className="flex items-start gap-6">
+          <div className="flex items-start gap-4 flex-1">
+            {athlete.photo_url && (
+              <img
+                src={athlete.photo_url}
+                alt={athlete.full_name}
+                className="w-24 h-24 rounded-full object-cover"
+              />
+            )}
+            <div className="flex-1">
+              <h1 className="text-2xl font-bold mb-2">{athlete.full_name || athlete.email}</h1>
+              {athlete.objectif && (
+                <p className="text-gray-700">
+                  <span className="font-semibold">Objectif :</span> {athlete.objectif}
+                </p>
+              )}
+            </div>
+          </div>
+          
+          {/* Courses prévues */}
+          <div className="flex-1">
+            <div className="bg-blue-50 p-4 rounded">
+              <div className="font-bold text-sm mb-3">🏁 Courses prévues</div>
+              {athlete.courses && athlete.courses.length > 0 ? (
+                <div className="space-y-2">
+                  {[...athlete.courses]
+                    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+                    .map((race: Race, idx: number) => (
+                      <div key={idx} className="bg-white p-2 rounded">
+                        <div className="text-sm">
+                          <span className="font-semibold">{race.nom}</span>
+                          <span className="text-gray-600 mx-2">•</span>
+                          {race.distance}
+                          <span className="text-gray-600 ml-2">
+                            ({new Date(race.date).toLocaleDateString('fr-FR')})
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              ) : (
+                <div className="text-sm text-gray-500 italic">Aucune course prévue</div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
 
