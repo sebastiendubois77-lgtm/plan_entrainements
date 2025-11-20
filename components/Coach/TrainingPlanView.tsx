@@ -32,11 +32,11 @@ interface Athlete {
 
 const SESSION_COLORS = {
   repos: 'bg-gray-100',
-  endurance: 'bg-yellow-200',
-  resistance: 'bg-orange-300',
-  vitesse: 'bg-red-300',
-  vma: 'bg-purple-300',
-  course: 'bg-blue-300'
+  endurance: 'bg-yellow-100',
+  resistance: 'bg-orange-200',
+  vitesse: 'bg-red-200',
+  vma: 'bg-purple-200',
+  course: 'bg-blue-200'
 };
 
 const DAYS = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
@@ -177,10 +177,12 @@ export default function TrainingPlanView({ athlete }: { athlete: Athlete }) {
           {session ? (
             <>
               {/* Planifié */}
-              <div className={`${bgColor} p-1 rounded mb-1 text-xs`}>
-                <div className="font-semibold">{session.session_type}</div>
-                <div className="text-xs truncate">{session.description}</div>
-              </div>
+              {session.description && (
+                <div className={`${bgColor} p-1 rounded mb-1 text-xs`}>
+                  <div className="font-semibold">{session.session_type}</div>
+                  <div className="text-xs truncate">{session.description}</div>
+                </div>
+              )}
               {/* Réalisé */}
               {session.is_completed && (
                 <div className="bg-green-100 p-1 rounded text-xs border-2 border-green-400">
@@ -333,12 +335,7 @@ export default function TrainingPlanView({ athlete }: { athlete: Athlete }) {
                     .map((race: Race, idx: number) => (
                       <div key={idx} className="bg-white p-2 rounded">
                         <div className="text-sm">
-                          <span className="font-semibold">{race.nom}</span>
-                          <span className="text-gray-600 mx-2">•</span>
-                          {race.distance}
-                          <span className="text-gray-600 ml-2">
-                            ({new Date(race.date).toLocaleDateString('fr-FR')})
-                          </span>
+                          {new Date(race.date).toLocaleDateString('fr-FR')}: <span className="font-semibold">{race.nom}</span>, {race.distance} km
                         </div>
                       </div>
                     ))}

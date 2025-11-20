@@ -32,11 +32,11 @@ interface Profile {
 
 const SESSION_COLORS = {
   repos: 'bg-gray-100',
-  endurance: 'bg-yellow-200',
-  resistance: 'bg-orange-300',
-  vitesse: 'bg-red-300',
-  vma: 'bg-purple-300',
-  course: 'bg-blue-300'
+  endurance: 'bg-yellow-100',
+  resistance: 'bg-orange-200',
+  vitesse: 'bg-red-200',
+  vma: 'bg-purple-200',
+  course: 'bg-blue-200'
 };
 
 const DAYS = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
@@ -200,7 +200,7 @@ export default function AthleteDashboard() {
           athlete_id: profile.id,
           date,
           session_type: 'repos',
-          description: 'Séance libre',
+          description: '',
           is_completed: true,
           completed_notes: editData.completed_notes,
           completed_time_minutes: isPast && editData.completed_time_minutes ? parseFloat(editData.completed_time_minutes) : null,
@@ -410,12 +410,7 @@ export default function AthleteDashboard() {
                       return (
                         <div key={idx} className="flex items-center justify-between bg-white p-2 rounded">
                           <div className="text-sm">
-                            <span className="font-semibold">{race.nom}</span>
-                            <span className="text-gray-600 mx-2">•</span>
-                            {race.distance}
-                            <span className="text-gray-600 ml-2">
-                              ({new Date(race.date).toLocaleDateString('fr-FR')})
-                            </span>
+                            {new Date(race.date).toLocaleDateString('fr-FR')}: <span className="font-semibold">{race.nom}</span>, {race.distance} km
                           </div>
                           <button
                             onClick={() => setRaceToDelete(originalIdx)}
