@@ -279,14 +279,17 @@ export default function TrainingPlanView({ athlete }: { athlete: Athlete }) {
         ) : !raceOnDate && session ? (
           <div
             onClick={() => setEditingCell(dateStr)}
-            className={`p-2 rounded cursor-pointer hover:opacity-80 min-h-[60px] ${
-              session.session_type === 'endurance' ? 'bg-yellow-100' :
-              session.session_type === 'resistance' ? 'bg-orange-200' :
-              session.session_type === 'vitesse' ? 'bg-red-200' :
-              session.session_type === 'vma' ? 'bg-purple-200' :
-              session.session_type === 'course' ? 'bg-blue-200' :
-              'bg-gray-100'
-            }`}
+            className="p-2 rounded cursor-pointer hover:opacity-80 min-h-[60px]"
+            style={{
+              backgroundColor: (
+                session.session_type === 'endurance' ? '#FEF3C7' :
+                session.session_type === 'resistance' ? '#FED7AA' :
+                session.session_type === 'vitesse' ? '#FECACA' :
+                session.session_type === 'vma' ? '#E9D5FF' :
+                session.session_type === 'course' ? '#BFDBFE' :
+                '#F3F4F6'
+              )
+            }}
           >
             <div className="font-semibold text-xs">{session.session_type}</div>
             <div className="text-xs mt-1">{session.description}</div>
