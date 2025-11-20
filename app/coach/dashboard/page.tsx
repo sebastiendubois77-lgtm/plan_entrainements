@@ -7,6 +7,7 @@ export default function CoachDashboard() {
   const [athletes, setAthletes] = useState<any[]>([]);
   const [selectedAthleteId, setSelectedAthleteId] = useState<string | null>(null);
   const [coachId, setCoachId] = useState<string | null>(null);
+  const [athleteToDelete, setAthleteToDelete] = useState<any | null>(null);
 
   async function fetchAthletes() {
     const { data: u } = await supabase.auth.getUser();
@@ -72,55 +73,36 @@ export default function CoachDashboard() {
                 onClick={() => setSelectedAthleteId(athlete.id)}
                 className="text-left flex-1 p-2"
               >
-                <div className="font-medium">{athlete.full_name || athlete.email}</div>
-                {athlete.objectif && <div className="text-xs text-gray-500">{athlete.objectif}</div>}
+                <div className="font-medium text-sm">{athlete.full_name || athlete.email}</div>
               </button>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={async () => {
-                    if (!confirm(`Supprimer ${athlete.full_name || athlete.email} ? Cette action est irréversible.`)) return;
-                    try {
-                      const res = await fetch('/api/delete-athlete', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ profileId: athlete.id })
-                      });
-                      const json = await res.json();
-                      if (!res.ok) throw new Error(json.error || 'Erreur');
-                      // refresh list
-                      fetchAthletes();
-                      if (selectedAthleteId === athlete.id) setSelectedAthleteId(null);
-                    } catch (err: any) {
-                      alert('Impossible de supprimer: ' + (err.message || String(err)));
-                    }
-                  }}
-                  title="Supprimer"
-                  className="text-red-600 hover:text-red-800 p-2 rounded"
-                >
-                  ✕
-                </button>
-              </div>
+              <button
+                onClick={() => setAthleteToDelete(athlete)}
+                title="Supprimer"
+                className={`p-2 rounded ${selectedAthleteId === athlete.id ? 'text-white hover:text-gray-200' : 'text-red-600 hover:text-red-800'}`}
+              >
+                ✕
+              </button>
             </div>
           ))}
         </div>
 
         {/* Formulaire d'ajout */}
         <div className="bg-white p-4 rounded shadow">
-          <h3 className="font-bold mb-3">Ajouter un athlète</h3>
+          <h3 className="font-bold mb-3 text-sm">Ajouter un athlète</h3>
           <form onSubmit={createAthlete} className="space-y-2">
             <input
               name="full_name"
               type="text"
               placeholder="Prénom Nom"
               required
-              className="w-full p-2 border rounded text-sm"
+              className="w-full px-2 py-1.5 border rounded text-sm"
             />
             <input
               name="email"
               type="email"
               placeholder="Email"
               required
-              className="w-full p-2 border rounded text-sm"
+              className="w-full px-2 py-1.5 border rounded text-sm"
             />
             <button
               type="submit"
@@ -142,6 +124,85 @@ export default function CoachDashboard() {
           </div>
         )}
       </div>
+
+      {/* Modale de confirmation de suppression */}
+      {athleteToDelete && (
+        <div 
+          style={{ 
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 9999,
+            backgroundColor: 'rgba(0, 0, 0, 0.75)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '1rem'
+          }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setAthleteToDelete(null);
+          }}
+        >
+          <div 
+            style={{
+              backgroundColor: 'white',
+              borderRadius: '0.5rem',
+              boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+              maxWidth: '28rem',
+              width: '100%'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-6">
+              <div className="mb-4">
+                <h2 className="text-xl font-bold text-red-600 mb-2">⚠️ Confirmer la suppression</h2>
+                <p className="text-gray-700">
+                  Êtes-vous sûr de vouloir supprimer cet athlète ?
+                  <span className="block mt-2 font-semibold">
+                    {athleteToDelete.full_name || athleteToDelete.email}
+                  </span>
+                </p>
+                <p className="text-sm text-gray-500 mt-2">
+                  Cette action est irréversible et supprimera toutes les données associées.
+                </p>
+              </div>
+
+              <div className="flex gap-3 mt-6">
+                <button
+                  onClick={() => setAthleteToDelete(null)}
+                  className="flex-1 px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-medium"
+                >
+                  Annuler
+                </button>
+                <button
+                  onClick={async () => {
+                    try {
+                      const res = await fetch('/api/delete-athlete', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ profileId: athleteToDelete.id })
+                      });
+                      const json = await res.json();
+                      if (!res.ok) throw new Error(json.error || 'Erreur');
+                      fetchAthletes();
+                      if (selectedAthleteId === athleteToDelete.id) setSelectedAthleteId(null);
+                      setAthleteToDelete(null);
+                    } catch (err: any) {
+                      alert('Impossible de supprimer: ' + (err.message || String(err)));
+                      setAthleteToDelete(null);
+                    }
+                  }}
+                  className="flex-1 px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium"
+                >
+                  Supprimer
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
