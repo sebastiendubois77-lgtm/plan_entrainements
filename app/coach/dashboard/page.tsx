@@ -68,12 +68,12 @@ export default function CoachDashboard() {
         {/* Liste des athlètes */}
         <div className="space-y-2 mb-8">
           {athletes.map(athlete => (
-            <div key={athlete.id} className={`flex items-center justify-between py-1.5 px-2 rounded transition ${selectedAthleteId === athlete.id ? 'bg-blue-500 text-white' : 'bg-white hover:bg-gray-50'}`}>
+            <div key={athlete.id} className={`flex items-center justify-between py-0.5 px-2 rounded transition ${selectedAthleteId === athlete.id ? 'bg-blue-500 text-white' : 'bg-white hover:bg-gray-50'}`}>
               <button
                 onClick={() => setSelectedAthleteId(athlete.id)}
-                className="text-left flex-1 py-1 px-1"
+                className="text-left flex-1 py-0.5 px-1"
               >
-                <div className="font-medium text-xs truncate">{athlete.full_name || athlete.email}</div>
+                <div className="font-medium text-xs truncate leading-tight">{athlete.full_name || athlete.email}</div>
               </button>
               <button
                 onClick={() => setAthleteToDelete(athlete)}
@@ -95,18 +95,18 @@ export default function CoachDashboard() {
               type="text"
               placeholder="Prénom Nom"
               required
-              className="w-full px-2 py-1 border rounded text-xs"
+              className="w-full px-2 h-8 border rounded text-xs leading-tight"
             />
             <input
               name="email"
               type="email"
               placeholder="Email"
               required
-              className="w-full px-2 py-1 border rounded text-xs"
+              className="w-full px-2 h-8 border rounded text-xs leading-tight"
             />
             <button
               type="submit"
-              className="w-full px-2 py-1.5 bg-orange-400 hover:bg-orange-500 text-white rounded text-xs font-medium"
+              className="w-full px-2 h-8 bg-orange-400 hover:bg-orange-500 text-white rounded text-xs font-medium"
             >
               Créer
             </button>
