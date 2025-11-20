@@ -73,6 +73,7 @@ export default function AthleteDashboard() {
   const [sessions, setSessions] = useState<{ [date: string]: TrainingSession }>({});
   const [loading, setLoading] = useState(true);
   const [editingCell, setEditingCell] = useState<string | null>(null);
+  const [editingDate, setEditingDate] = useState<Date | null>(null);
   const [editData, setEditData] = useState<{
     completed_notes: string;
     completed_time_minutes: string;
@@ -178,8 +179,7 @@ export default function AthleteDashboard() {
             completed_distance_km: isPast && editData.completed_distance_km ? parseFloat(editData.completed_distance_km) : undefined
           }
         }));
-        setEditingCell(null);
-        setEditData({ completed_notes: '', completed_time_minutes: '', completed_distance_km: '' });
+        closeModal();
       }
     } else if (profile) {
       // Create new session (libre, pas planifié par le coach)
@@ -203,20 +203,26 @@ export default function AthleteDashboard() {
         console.error('Error creating session:', error);
       } else if (data) {
         setSessions(prev => ({ ...prev, [date]: data }));
-        setEditingCell(null);
-        setEditData({ completed_notes: '', completed_time_minutes: '', completed_distance_km: '' });
+        closeModal();
       }
     }
   }
 
-  function startEditing(date: string) {
+  function startEditing(date: string, dateObj: Date) {
     const session = sessions[date];
     setEditingCell(date);
+    setEditingDate(dateObj);
     setEditData({
       completed_notes: session?.completed_notes || '',
       completed_time_minutes: session?.completed_time_minutes?.toString() || '',
       completed_distance_km: session?.completed_distance_km?.toString() || ''
     });
+  }
+
+  function closeModal() {
+    setEditingCell(null);
+    setEditingDate(null);
+    setEditData({ completed_notes: '', completed_time_minutes: '', completed_distance_km: '' });
   }
 
   function getRaceOnDate(date: Date): Race | undefined {
@@ -244,8 +250,14 @@ export default function AthleteDashboard() {
   function renderCell(date: Date, isPast: boolean, raceOnDate?: Race) {
     const dateStr = formatDate(date);
     const session = sessions[dateStr];
-    const isEditing = editingCell === dateStr;
     const bgColor = raceOnDate ? SESSION_COLORS.course : (session ? SESSION_COLORS[session.session_type] : SESSION_COLORS.repos);
+    
+    // Déterminer si c'est dans le passé en comparant avec aujourd'hui (pas la semaine)
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const currentDate = new Date(date);
+    currentDate.setHours(0, 0, 0, 0);
+    const isInPast = currentDate <= today;
 
     return (
       <td key={dateStr} className="border p-2 align-top">
@@ -261,58 +273,11 @@ export default function AthleteDashboard() {
           </div>
         )}
 
-        {/* Zone de saisie / affichage du réalisé */}
-        {isEditing ? (
-          <div className="bg-blue-50 border-2 border-blue-400 p-2 rounded space-y-2">
-            <div className="font-semibold text-xs text-blue-800">
-              {isPast ? '✓ Ce que j\'ai fait' : '📝 Note / Empêchement'}
-            </div>
-            {isPast && (
-              <>
-                <input
-                  type="number"
-                  step="0.1"
-                  placeholder="Temps (min)"
-                  value={editData.completed_time_minutes}
-                  onChange={(e) => setEditData(prev => ({ ...prev, completed_time_minutes: e.target.value }))}
-                  className="w-full text-xs p-1 border rounded"
-                />
-                <input
-                  type="number"
-                  step="0.1"
-                  placeholder="Distance (km)"
-                  value={editData.completed_distance_km}
-                  onChange={(e) => setEditData(prev => ({ ...prev, completed_distance_km: e.target.value }))}
-                  className="w-full text-xs p-1 border rounded"
-                />
-              </>
-            )}
-            <textarea
-              placeholder={isPast ? "Notes sur la séance..." : "Notes / empêchements..."}
-              value={editData.completed_notes}
-              onChange={(e) => setEditData(prev => ({ ...prev, completed_notes: e.target.value }))}
-              className="w-full text-xs p-1 border rounded"
-              rows={2}
-            />
-            <div className="flex gap-1">
-              <button
-                onClick={() => saveCompletion(dateStr, isPast)}
-                className="flex-1 text-xs bg-blue-600 text-white py-1 rounded hover:bg-blue-700"
-              >
-                Sauvegarder
-              </button>
-              <button
-                onClick={() => setEditingCell(null)}
-                className="flex-1 text-xs bg-gray-400 text-white py-1 rounded hover:bg-gray-500"
-              >
-                Annuler
-              </button>
-            </div>
-          </div>
-        ) : (session?.is_completed || session?.completed_notes) ? (
+        {/* Affichage du réalisé ou bouton d'ajout */}
+        {(session?.is_completed || session?.completed_notes) ? (
           <div className="bg-green-100 border-2 border-green-400 p-2 rounded">
             <div className="font-semibold text-xs text-green-800">
-              {isPast ? '✓ Réalisé' : '📝 Note'}
+              {isInPast ? '✓ Réalisé' : '📝 Note'}
             </div>
             {session.completed_time_minutes && (
               <div className="text-xs">⏱️ {session.completed_time_minutes} min</div>
@@ -321,10 +286,10 @@ export default function AthleteDashboard() {
               <div className="text-xs">📏 {session.completed_distance_km} km</div>
             )}
             {session.completed_notes && (
-              <div className="text-xs mt-1 text-gray-700">{session.completed_notes}</div>
+              <div className="text-xs mt-1 text-gray-700 line-clamp-2">{session.completed_notes}</div>
             )}
             <button
-              onClick={() => startEditing(dateStr)}
+              onClick={() => startEditing(dateStr, date)}
               className="text-xs text-blue-600 hover:underline mt-1"
             >
               Modifier
@@ -332,10 +297,10 @@ export default function AthleteDashboard() {
           </div>
         ) : (
           <button
-            onClick={() => startEditing(dateStr)}
+            onClick={() => startEditing(dateStr, date)}
             className="w-full text-xs bg-blue-500 text-white py-1 rounded hover:bg-blue-600"
           >
-            {isPast ? '+ Ajouter ce qui a été fait' : '+ Ajouter une note'}
+            {isInPast ? '+ Ajouter ce qui a été fait' : '+ Ajouter une note'}
           </button>
         )}
       </td>
@@ -432,6 +397,115 @@ export default function AthleteDashboard() {
           );
         })}
       </div>
+
+      {/* Modale d'édition */}
+      {editingCell && editingDate && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              {/* En-tête */}
+              <div className="flex items-center justify-between mb-4 pb-4 border-b">
+                <div>
+                  <h2 className="text-xl font-bold">
+                    {new Date(editingDate).getTime() <= new Date().setHours(0,0,0,0) 
+                      ? '✓ Ce que j\'ai fait'
+                      : '📝 Ajouter une note'
+                    }
+                  </h2>
+                  <p className="text-sm text-gray-600">
+                    {editingDate.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}
+                  </p>
+                </div>
+                <button
+                  onClick={closeModal}
+                  className="text-gray-400 hover:text-gray-600 text-2xl"
+                >
+                  ×
+                </button>
+              </div>
+
+              {/* Séance planifiée */}
+              {sessions[editingCell] && sessions[editingCell].description && (
+                <div className="mb-6 p-4 bg-gray-50 rounded">
+                  <div className="text-sm font-semibold text-gray-700 mb-2">Séance planifiée :</div>
+                  <div className="text-sm">{sessions[editingCell].description}</div>
+                </div>
+              )}
+
+              {/* Formulaire */}
+              <div className="space-y-4">
+                {new Date(editingDate).getTime() <= new Date().setHours(0,0,0,0) && (
+                  <>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        ⏱️ Temps de course (minutes)
+                      </label>
+                      <input
+                        type="number"
+                        step="0.1"
+                        placeholder="Ex: 45"
+                        value={editData.completed_time_minutes}
+                        onChange={(e) => setEditData(prev => ({ ...prev, completed_time_minutes: e.target.value }))}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        📏 Distance parcourue (km)
+                      </label>
+                      <input
+                        type="number"
+                        step="0.1"
+                        placeholder="Ex: 8.5"
+                        value={editData.completed_distance_km}
+                        onChange={(e) => setEditData(prev => ({ ...prev, completed_distance_km: e.target.value }))}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                    </div>
+                  </>
+                )}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    {new Date(editingDate).getTime() <= new Date().setHours(0,0,0,0)
+                      ? '📝 Notes sur la séance'
+                      : '📝 Notes / Empêchements'
+                    }
+                  </label>
+                  <textarea
+                    placeholder={new Date(editingDate).getTime() <= new Date().setHours(0,0,0,0)
+                      ? "Comment s'est passée la séance ? Sensations ? Difficultés ?"
+                      : "Notes, empêchements, indisponibilités..."
+                    }
+                    value={editData.completed_notes}
+                    onChange={(e) => setEditData(prev => ({ ...prev, completed_notes: e.target.value }))}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    rows={6}
+                  />
+                </div>
+              </div>
+
+              {/* Boutons d'action */}
+              <div className="flex gap-3 mt-6 pt-4 border-t">
+                <button
+                  onClick={closeModal}
+                  className="flex-1 px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-medium"
+                >
+                  Annuler
+                </button>
+                <button
+                  onClick={() => {
+                    const isInPast = new Date(editingDate).getTime() <= new Date().setHours(0,0,0,0);
+                    saveCompletion(editingCell, isInPast);
+                  }}
+                  className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
+                >
+                  Enregistrer
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
