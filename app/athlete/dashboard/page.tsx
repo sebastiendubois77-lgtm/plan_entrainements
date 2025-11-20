@@ -130,6 +130,12 @@ export default function AthleteDashboard() {
     if (profileData) {
       setProfile(profileData);
 
+      // Si premier usage (nom ou objectif manquant), forcer l'athlète sur la page profil
+      if (!profileData.full_name || !profileData.objectif) {
+        router.push('/athlete/profile');
+        return;
+      }
+
       // Fetch sessions
       const startDate = formatDate(pastWeeks[0]);
       const endDate = formatDate(new Date(futureWeeks[futureWeeks.length - 1].getTime() + 6 * 24 * 60 * 60 * 1000));
@@ -405,6 +411,10 @@ export default function AthleteDashboard() {
             ) : (
               <div className="text-lg text-gray-600">Aucun objectif défini</div>
             )}
+
+            <div className="mt-4">
+              <a href="/athlete/profile" className="inline-block text-sm text-blue-600 hover:underline">→ Éditer mon profil</a>
+            </div>
           </div>
         </div>
 

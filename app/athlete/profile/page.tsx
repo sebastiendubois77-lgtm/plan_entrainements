@@ -162,120 +162,121 @@ export default function AthleteProfile() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
+    <div className="max-w-4xl mx-auto p-6">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold">Mon profil</h1>
+        <h1 className="text-4xl font-extrabold">Mon profil</h1>
         <button
           onClick={() => router.push('/athlete/dashboard')}
-          className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+          className="px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
         >
           ← Retour au plan
         </button>
       </div>
 
-      <form onSubmit={handleSave} className="space-y-6">
-        {/* Photo */}
-        <div>
-          <label className="block text-sm font-medium mb-2">Photo de profil</label>
-          <div className="flex items-center gap-4">
-            {photoUrl && (
-              <img src={photoUrl} alt="Photo de profil" className="w-24 h-24 object-cover rounded-full" />
-            )}
-            <div className="flex-1">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handlePhotoUpload}
-                disabled={uploading}
-                className="w-full p-2 border rounded"
-              />
-              <p className="text-xs text-gray-500 mt-1">
-                {uploading ? 'Téléchargement en cours...' : 'Maximum 5 Mo • JPG, PNG, GIF'}
-              </p>
+      <div className="bg-white rounded-xl shadow p-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="md:col-span-1 flex flex-col items-center">
+            <div className="w-32 h-32 bg-gray-100 rounded-full overflow-hidden mb-4">
+              {photoUrl ? (
+                <img src={photoUrl} alt="Photo de profil" className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-gray-400">No photo</div>
+              )}
             </div>
+            <label className="block text-sm font-medium mb-2">Changer la photo</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handlePhotoUpload}
+              disabled={uploading}
+              className="w-full p-2 border rounded"
+            />
+            <p className="text-xs text-gray-500 mt-2">{uploading ? 'Téléchargement...' : 'Max 2 Mo • JPG/PNG/WebP'}</p>
           </div>
-        </div>
 
-        {/* Date de naissance */}
-        <div>
-          <label className="block text-sm font-medium mb-2">Date de naissance</label>
-          <input
-            type="date"
-            value={dateNaissance}
-            onChange={e => setDateNaissance(e.target.value)}
-            className="w-full p-2 border rounded"
-          />
-        </div>
+          <div className="md:col-span-2">
+            <form onSubmit={handleSave} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Prénom & Nom</label>
+                  <input
+                    type="text"
+                    value={profile?.full_name || ''}
+                    onChange={(e) => setProfile(prev => ({ ...prev, full_name: e.target.value }))}
+                    className="w-full p-3 border rounded-lg"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Date de naissance</label>
+                  <input
+                    type="date"
+                    value={dateNaissance}
+                    onChange={e => setDateNaissance(e.target.value)}
+                    className="w-full p-3 border rounded-lg"
+                  />
+                </div>
+              </div>
 
-        {/* Jours disponibles */}
-        <div>
-          <label className="block text-sm font-medium mb-2">Jours disponibles pour courir</label>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-            {JOURS.map(jour => (
-              <label key={jour} className="flex items-center space-x-2 p-2 border rounded cursor-pointer hover:bg-gray-50">
-                <input
-                  type="checkbox"
-                  checked={joursDisponibles.includes(jour)}
-                  onChange={() => toggleJour(jour)}
-                  className="w-4 h-4"
+              <div>
+                <label className="block text-sm font-medium mb-2">Objectif</label>
+                <textarea
+                  value={objectif}
+                  onChange={e => setObjectif(e.target.value)}
+                  className="w-full p-3 border rounded-lg"
+                  rows={3}
+                  placeholder="Ex: Courir un semi-marathon en moins de 2h"
                 />
-                <span>{jour}</span>
-              </label>
-            ))}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Jours disponibles</label>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                  {JOURS.map(jour => (
+                    <label key={jour} className={`flex items-center space-x-2 p-2 border rounded cursor-pointer hover:bg-gray-50 ${joursDisponibles.includes(jour) ? 'bg-blue-50 border-blue-200' : ''}`}>
+                      <input
+                        type="checkbox"
+                        checked={joursDisponibles.includes(jour)}
+                        onChange={() => toggleJour(jour)}
+                        className="w-4 h-4"
+                      />
+                      <span>{jour}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Nombre d'entraînements / semaine: <span className="font-semibold">{entrainementsParSemaine}</span></label>
+                <input
+                  type="range"
+                  min="1"
+                  max="7"
+                  value={entrainementsParSemaine}
+                  onChange={e => setEntrainementsParSemaine(Number(e.target.value))}
+                  className="w-full"
+                />
+              </div>
+
+              <div className="flex gap-4">
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400"
+                >
+                  {saving ? 'Enregistrement...' : 'Enregistrer'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => router.push('/athlete/dashboard')}
+                  className="px-6 py-3 bg-gray-100 rounded-lg hover:bg-gray-200"
+                >
+                  Annuler
+                </button>
+              </div>
+            </form>
           </div>
         </div>
-
-        {/* Nombre d'entraînements par semaine */}
-        <div>
-          <label className="block text-sm font-medium mb-2">
-            Nombre d'entraînements par semaine souhaité: {entrainementsParSemaine}
-          </label>
-          <input
-            type="range"
-            min="1"
-            max="7"
-            value={entrainementsParSemaine}
-            onChange={e => setEntrainementsParSemaine(Number(e.target.value))}
-            className="w-full"
-          />
-          <div className="flex justify-between text-xs text-gray-500">
-            <span>1</span>
-            <span>7</span>
-          </div>
-        </div>
-
-        {/* Objectif */}
-        <div>
-          <label className="block text-sm font-medium mb-2">Objectif</label>
-          <textarea
-            value={objectif}
-            onChange={e => setObjectif(e.target.value)}
-            className="w-full p-2 border rounded"
-            rows={3}
-            placeholder="Ex: Courir un semi-marathon en moins de 2h"
-          />
-        </div>
-
-
-
-        {/* Buttons */}
-        <div className="flex gap-4">
-          <button
-            type="submit"
-            disabled={saving}
-            className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-gray-400"
-          >
-            {saving ? 'Enregistrement...' : 'Enregistrer'}
-          </button>
-          <button
-            type="button"
-            onClick={() => router.push('/athlete/dashboard')}
-            className="px-6 py-2 bg-gray-200 rounded hover:bg-gray-300"
-          >
-            Annuler
-          </button>
-        </div>
-      </form>
+      </div>
     </div>
   );
 }
