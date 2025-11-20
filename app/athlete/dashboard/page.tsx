@@ -112,7 +112,7 @@ export default function AthleteDashboard() {
     const { data: profileData } = await supabase
       .from('profiles')
       .select('id, full_name, objectif, courses')
-      .eq('id', user.id)
+      .eq('auth_uid', user.id)
       .single();
 
     if (profileData) {

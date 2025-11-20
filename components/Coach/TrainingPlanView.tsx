@@ -157,9 +157,19 @@ export default function TrainingPlanView({ athlete }: { athlete: Athlete }) {
 
   function renderCell(date: Date, isPast: boolean, raceOnDate?: Race) {
     const dateStr = formatDate(date);
-    const session = sessions[dateStr] || { date: dateStr, session_type: 'repos', description: '' };
+    const session = sessions[dateStr];
     const isEditing = editingCell === dateStr;
-    const bgColor = raceOnDate ? SESSION_COLORS.course : SESSION_COLORS[session.session_type];
+    
+    if (!session && !raceOnDate) {
+      return (
+        <td key={dateStr} className="border p-2 align-top">
+          <div className="text-xs text-gray-400">{date.getDate()}/{date.getMonth() + 1}</div>
+          <div className="text-xs text-gray-400 mt-2">Repos</div>
+        </td>
+      );
+    }
+    
+    const bgColor = raceOnDate ? SESSION_COLORS.course : (session ? SESSION_COLORS[session.session_type] : SESSION_COLORS.repos);
 
     if (isPast && !isEditing) {
       // Historique : afficher planifié + réalisé
@@ -197,12 +207,12 @@ export default function TrainingPlanView({ athlete }: { athlete: Athlete }) {
         {!raceOnDate && isEditing ? (
           <div className="space-y-1">
             <select
-              value={session.session_type}
+              value={session?.session_type || 'repos'}
               onChange={(e) => {
                 const newType = e.target.value as SessionType;
                 setSessions(prev => ({
                   ...prev,
-                  [dateStr]: { ...prev[dateStr], session_type: newType }
+                  [dateStr]: { ...prev[dateStr], date: dateStr, session_type: newType, description: prev[dateStr]?.description || '' }
                 }));
               }}
               className="w-full text-xs p-1 border rounded"
@@ -214,11 +224,11 @@ export default function TrainingPlanView({ athlete }: { athlete: Athlete }) {
               <option value="vma">VMA</option>
             </select>
             <textarea
-              value={session.description}
+              value={session?.description || ''}
               onChange={(e) => {
                 setSessions(prev => ({
                   ...prev,
-                  [dateStr]: { ...prev[dateStr], description: e.target.value }
+                  [dateStr]: { ...prev[dateStr], date: dateStr, session_type: prev[dateStr]?.session_type || 'repos', description: e.target.value }
                 }));
               }}
               placeholder="Description de la séance"
@@ -227,7 +237,8 @@ export default function TrainingPlanView({ athlete }: { athlete: Athlete }) {
             />
             <button
               onClick={() => {
-                saveSession(dateStr, session.session_type, session.description);
+                const currentSession = sessions[dateStr] || { date: dateStr, session_type: 'repos', description: '' };
+                saveSession(dateStr, currentSession.session_type, currentSession.description);
                 setEditingCell(null);
               }}
               className="w-full text-xs bg-blue-500 text-white py-1 rounded hover:bg-blue-600"
@@ -235,13 +246,26 @@ export default function TrainingPlanView({ athlete }: { athlete: Athlete }) {
               Sauvegarder
             </button>
           </div>
-        ) : !raceOnDate ? (
+        ) : !raceOnDate && session ? (
           <div
             onClick={() => setEditingCell(dateStr)}
             className={`${bgColor} p-2 rounded cursor-pointer hover:opacity-80 min-h-[60px]`}
           >
             <div className="font-semibold text-xs">{session.session_type}</div>
             <div className="text-xs mt-1">{session.description}</div>
+          </div>
+        ) : !raceOnDate ? (
+          <div
+            onClick={() => {
+              setSessions(prev => ({
+                ...prev,
+                [dateStr]: { date: dateStr, session_type: 'repos', description: '' }
+              }));
+              setEditingCell(dateStr);
+            }}
+            className="bg-gray-50 p-2 rounded cursor-pointer hover:bg-gray-100 min-h-[60px] border-2 border-dashed border-gray-300 flex items-center justify-center"
+          >
+            <div className="text-xs text-gray-400">+ Ajouter séance</div>
           </div>
         ) : null}
       </td>
