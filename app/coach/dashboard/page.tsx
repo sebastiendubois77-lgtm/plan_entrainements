@@ -62,23 +62,23 @@ export default function CoachDashboard() {
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
-      <div className="w-64 bg-gray-100 p-4 overflow-y-auto border-r-2 border-gray-300">
-        <h2 className="text-xl font-bold mb-4">Mes athlètes</h2>
+      <div className="w-56 bg-gray-100 p-3 overflow-y-auto">
+        <h2 className="text-lg font-bold mb-4">Mes athlètes</h2>
         
         {/* Liste des athlètes */}
-        <div className="space-y-2 mb-6">
+        <div className="space-y-2 mb-8">
           {athletes.map(athlete => (
-            <div key={athlete.id} className={`flex items-center justify-between p-2 rounded transition ${selectedAthleteId === athlete.id ? 'bg-blue-500 text-white' : 'bg-white hover:bg-gray-50'}`}>
+            <div key={athlete.id} className={`flex items-center justify-between py-1.5 px-2 rounded transition ${selectedAthleteId === athlete.id ? 'bg-blue-500 text-white' : 'bg-white hover:bg-gray-50'}`}>
               <button
                 onClick={() => setSelectedAthleteId(athlete.id)}
-                className="text-left flex-1 p-2"
+                className="text-left flex-1 py-1 px-1"
               >
-                <div className="font-medium text-sm">{athlete.full_name || athlete.email}</div>
+                <div className="font-medium text-xs truncate">{athlete.full_name || athlete.email}</div>
               </button>
               <button
                 onClick={() => setAthleteToDelete(athlete)}
                 title="Supprimer"
-                className={`p-2 rounded ${selectedAthleteId === athlete.id ? 'text-white hover:text-gray-200' : 'text-red-600 hover:text-red-800'}`}
+                className={`p-1 rounded text-sm ${selectedAthleteId === athlete.id ? 'text-white hover:text-gray-200' : 'text-red-600 hover:text-red-800'}`}
               >
                 ✕
               </button>
@@ -87,26 +87,26 @@ export default function CoachDashboard() {
         </div>
 
         {/* Formulaire d'ajout */}
-        <div className="bg-white p-4 rounded shadow">
-          <h3 className="font-bold mb-3 text-sm">Ajouter un athlète</h3>
-          <form onSubmit={createAthlete} className="space-y-2">
+        <div className="bg-white p-3 rounded shadow">
+          <h3 className="font-bold mb-2 text-xs">Ajouter un athlète</h3>
+          <form onSubmit={createAthlete} className="space-y-1.5">
             <input
               name="full_name"
               type="text"
               placeholder="Prénom Nom"
               required
-              className="w-full px-2 py-1.5 border rounded text-sm"
+              className="w-full px-2 py-1 border rounded text-xs"
             />
             <input
               name="email"
               type="email"
               placeholder="Email"
               required
-              className="w-full px-2 py-1.5 border rounded text-sm"
+              className="w-full px-2 py-1 border rounded text-xs"
             />
             <button
               type="submit"
-              className="w-full px-3 py-2 bg-orange-400 hover:bg-orange-500 text-white rounded"
+              className="w-full px-2 py-1.5 bg-orange-400 hover:bg-orange-500 text-white rounded text-xs font-medium"
             >
               Créer
             </button>
