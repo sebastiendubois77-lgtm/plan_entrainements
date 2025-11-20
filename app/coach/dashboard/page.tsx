@@ -1,11 +1,11 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../../lib/supabaseClient';
-import CoachAthleteList from '../../../components/Coach/AthleteList';
-import PlanEditor from '../../../components/Coach/PlanEditor';
+import TrainingPlanView from '../../../components/Coach/TrainingPlanView';
 
 export default function CoachDashboard() {
   const [athletes, setAthletes] = useState<any[]>([]);
+  const [selectedAthleteId, setSelectedAthleteId] = useState<string | null>(null);
   const [coachId, setCoachId] = useState<string | null>(null);
 
   async function fetchAthletes() {
@@ -13,74 +13,112 @@ export default function CoachDashboard() {
     const user = u.user;
     if (!user) return;
     setCoachId(user.id);
-    // fetch athlete profiles where coach_user_id = user.id (or role = 'athlete')
+    
     const { data, error } = await supabase
       .from('profiles')
-      .select('id,full_name,email')
+      .select('id, full_name, email, photo_url, objectif')
       .eq('role', 'athlete')
       .eq('coach_user_id', user.id);
+      
     if (!error && data) {
-      // map to shape expected by AthleteList
-      setAthletes(
-        data.map((p: any) => ({ id: p.id, name: p.full_name || p.email || 'Athlète' }))
-      );
+      setAthletes(data);
+      if (data.length > 0 && !selectedAthleteId) {
+        setSelectedAthleteId(data[0].id);
+      }
+    }
+  }
+
+  async function createAthlete(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    const email = formData.get('email') as string;
+    const fullName = formData.get('full_name') as string;
+
+    if (!coachId) return alert('Coach non identifié');
+    
+    const res = await fetch('/api/create-athlete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, full_name: fullName, coach_user_id: coachId })
+    });
+    
+    const json = await res.json();
+    if (res.ok) {
+      alert(`Athlète créé ! Lien d'invitation :\n${json.inviteLink}\n\nCopiez ce lien et envoyez-le à l'athlète.`);
+      form.reset();
+      fetchAthletes();
+    } else {
+      alert(json.error || 'Erreur lors de la création');
     }
   }
 
   useEffect(() => {
     fetchAthletes();
   }, []);
-  const [selected, setSelected] = useState<string | null>(null);
+
+  const selectedAthlete = athletes.find(a => a.id === selectedAthleteId);
 
   return (
-    <div className="mt-6">
-      <h2 className="text-2xl font-semibold mb-4">Espace coach</h2>
-      <div className="flex gap-6">
-        <div className="w-64">
-          <div className="bg-white p-4 rounded shadow mb-4">
-            <h3 className="font-bold mb-2">Liste déroulante athlètes</h3>
-            <select className="w-full p-2 border rounded" value={selected || ''} onChange={e=>setSelected(e.target.value || null)}>
-              <option value="">-- Choisir un athlète --</option>
-              {athletes.map(a => (
-                <option key={a.id} value={a.id}>{a.name}</option>
-              ))}
-            </select>
-            <div className="mt-3 text-left">
-              <button className="px-3 py-2 bg-orange-300 text-black rounded" onClick={(e)=>{e.preventDefault(); const el = document.getElementById('athlete-add-form'); if (el) el.scrollIntoView({behavior:'smooth'});}}>Ajout</button>
-            </div>
-          </div>
-          <div id="athlete-add-form" className="bg-white p-4 rounded shadow">
-            <h4 className="font-semibold mb-2">Ajouter un athlète</h4>
-            <CoachAthleteList athletes={athletes} coachId={coachId} onRefresh={fetchAthletes} />
-          </div>
+    <div className="flex h-screen">
+      {/* Sidebar */}
+      <div className="w-64 bg-gray-100 p-4 overflow-y-auto">
+        <h2 className="text-xl font-bold mb-4">Mes athlètes</h2>
+        
+        {/* Liste des athlètes */}
+        <div className="space-y-2 mb-6">
+          {athletes.map(athlete => (
+            <button
+              key={athlete.id}
+              onClick={() => setSelectedAthleteId(athlete.id)}
+              className={`w-full text-left p-3 rounded transition ${
+                selectedAthleteId === athlete.id
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-white hover:bg-gray-50'
+              }`}
+            >
+              <div className="font-medium">{athlete.full_name || athlete.email}</div>
+            </button>
+          ))}
         </div>
 
-        <div className="flex-1">
-          <div className="bg-white p-6 rounded shadow h-80 flex items-center justify-center">
-            {!selected && (
-              <div className="text-center text-gray-600">
-                <div className="font-bold mb-2">Informations de l'athlète sélectionné</div>
-                <div>- Choisissez un athlète à gauche -</div>
-              </div>
-            )}
-            {selected && (
-              <div className="w-full h-full flex flex-col justify-between">
-                <div className="text-center">
-                  <div className="font-bold text-lg mb-2">{athletes.find(a=>a.id===selected)?.name}</div>
-                  <div className="text-sm text-gray-600">- Réalisé les 4 dernières semaines</div>
-                  <div className="text-sm text-gray-600">- Planifié les deux prochaines semaines</div>
-                </div>
-                <div className="text-right">
-                  <button className="px-4 py-2 bg-teal-800 text-white rounded">Modifier plan</button>
-                </div>
-              </div>
-            )}
-          </div>
-          <div className="mt-4 bg-white p-4 rounded shadow">
-            <h3 className="font-bold mb-2">Créer / éditer un plan</h3>
-            <PlanEditor athletes={athletes} onCreated={fetchAthletes} />
-          </div>
+        {/* Formulaire d'ajout */}
+        <div className="bg-white p-4 rounded shadow">
+          <h3 className="font-bold mb-3">Ajouter un athlète</h3>
+          <form onSubmit={createAthlete} className="space-y-2">
+            <input
+              name="full_name"
+              type="text"
+              placeholder="Prénom Nom"
+              required
+              className="w-full p-2 border rounded text-sm"
+            />
+            <input
+              name="email"
+              type="email"
+              placeholder="Email"
+              required
+              className="w-full p-2 border rounded text-sm"
+            />
+            <button
+              type="submit"
+              className="w-full px-3 py-2 bg-orange-400 hover:bg-orange-500 text-white rounded"
+            >
+              Créer
+            </button>
+          </form>
         </div>
+      </div>
+
+      {/* Zone principale */}
+      <div className="flex-1 overflow-y-auto">
+        {selectedAthlete ? (
+          <TrainingPlanView athlete={selectedAthlete} />
+        ) : (
+          <div className="flex items-center justify-center h-full text-gray-400">
+            Sélectionnez un athlète
+          </div>
+        )}
       </div>
     </div>
   );
