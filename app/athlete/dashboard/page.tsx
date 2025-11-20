@@ -147,7 +147,10 @@ export default function AthleteDashboard() {
 
   async function saveCompletion(date: string) {
     const session = sessions[date];
-    if (!session?.id) return;
+    if (!session?.id) {
+      alert('Aucune séance planifiée pour ce jour. Demandez à votre coach d\'ajouter une séance.');
+      return;
+    }
 
     const { error } = await supabase
       .from('training_sessions')
@@ -159,7 +162,10 @@ export default function AthleteDashboard() {
       })
       .eq('id', session.id);
 
-    if (!error) {
+    if (error) {
+      alert('Erreur lors de la sauvegarde: ' + error.message);
+      console.error('Error saving completion:', error);
+    } else {
       setSessions(prev => ({
         ...prev,
         [date]: {

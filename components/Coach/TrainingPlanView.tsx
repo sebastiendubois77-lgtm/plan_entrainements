@@ -129,7 +129,10 @@ export default function TrainingPlanView({ athlete }: { athlete: Athlete }) {
         .update({ session_type: sessionType, description })
         .eq('id', session.id);
       
-      if (!error) {
+      if (error) {
+        alert('Erreur lors de la mise à jour: ' + error.message);
+        console.error('Error updating session:', error);
+      } else {
         setSessions(prev => ({
           ...prev,
           [date]: { ...prev[date], session_type: sessionType, description }
@@ -149,7 +152,10 @@ export default function TrainingPlanView({ athlete }: { athlete: Athlete }) {
         .select()
         .single();
       
-      if (!error && data) {
+      if (error) {
+        alert('Erreur lors de la création: ' + error.message);
+        console.error('Error creating session:', error, 'athlete.id:', athlete.id);
+      } else if (data) {
         setSessions(prev => ({ ...prev, [date]: data }));
       }
     }
