@@ -62,7 +62,7 @@ export default function CoachDashboard() {
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
-      <div className="w-64 bg-gray-100 p-4 overflow-y-auto">
+      <div className="w-64 bg-gray-100 p-4 overflow-y-auto border-r-2 border-gray-300">
         <h2 className="text-xl font-bold mb-4">Mes athlètes</h2>
         
         {/* Liste des athlètes */}
