@@ -181,25 +181,27 @@ export default function TrainingPlanView({ athlete }: { athlete: AthleteExtended
           <div className="text-xs text-gray-600 mb-1">{date.getDate()}/{date.getMonth() + 1}</div>
           {session ? (
             <>
-              {/* Planifié */}
-              <div
-                className="p-1 rounded mb-1 text-xs"
-                style={{
-                  backgroundColor: (
-                    session.session_type === 'endurance' ? '#FEF3C7' :
-                    session.session_type === 'resistance' ? '#FED7AA' :
-                    session.session_type === 'vitesse' ? '#FECACA' :
-                    session.session_type === 'vma' ? '#E9D5FF' :
-                    session.session_type === 'course' ? '#BFDBFE' :
-                    '#F3F4F6'
-                  )
-                }}
-              >
-                <div className="font-semibold">{session.session_type}</div>
-                {session.description && (
-                  <div className="text-xs truncate">{session.description}</div>
-                )}
-              </div>
+              {/* Planifié - ne pas afficher si c'est une "Séance libre" complétée */}
+              {!(session.description === 'Séance libre' && session.is_completed) && (
+                <div
+                  className="p-1 rounded mb-1 text-xs"
+                  style={{
+                    backgroundColor: (
+                      session.session_type === 'endurance' ? '#FEF3C7' :
+                      session.session_type === 'resistance' ? '#FED7AA' :
+                      session.session_type === 'vitesse' ? '#FECACA' :
+                      session.session_type === 'vma' ? '#E9D5FF' :
+                      session.session_type === 'course' ? '#BFDBFE' :
+                      '#F3F4F6'
+                    )
+                  }}
+                >
+                  <div className="font-semibold">{session.session_type}</div>
+                  {session.description && (
+                    <div className="text-xs truncate">{session.description}</div>
+                  )}
+                </div>
+              )}
               {/* Réalisé */}
               {session.is_completed && (
                 <div className="bg-green-100 p-1 rounded text-xs border-2 border-green-400">
