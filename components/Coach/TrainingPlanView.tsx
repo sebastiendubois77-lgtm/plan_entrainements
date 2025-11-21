@@ -211,7 +211,7 @@ export default function TrainingPlanView({ athlete }: { athlete: AthleteExtended
                     <div className="text-xs">📏 {session.completed_distance_km} km</div>
                   )}
                   {session.completed_notes && (
-                    <div className="text-xs truncate">{session.completed_notes}</div>
+                    <div className="text-xs mt-1">{session.completed_notes}</div>
                   )}
                 </div>
               )}

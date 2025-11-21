@@ -87,26 +87,26 @@ export default function CoachDashboard() {
         </div>
 
         {/* Formulaire d'ajout */}
-        <div className="bg-white p-3 rounded shadow">
-          <h3 className="font-bold mb-2 text-xs">Ajouter un athlète</h3>
-          <form onSubmit={createAthlete} className="space-y-1.5">
+        <div className="bg-white p-4 rounded shadow">
+          <h3 className="font-bold mb-3 text-sm">Ajouter un athlète</h3>
+          <form onSubmit={createAthlete} className="space-y-2">
             <input
               name="full_name"
               type="text"
               placeholder="Prénom Nom"
               required
-              className="w-full px-2 h-8 border rounded text-xs leading-tight"
+              className="w-full max-w-[400px] px-2 h-8 border rounded text-sm leading-tight"
             />
             <input
               name="email"
               type="email"
               placeholder="Email"
               required
-              className="w-full px-2 h-8 border rounded text-xs leading-tight"
+              className="w-full max-w-[400px] px-2 h-8 border rounded text-sm leading-tight"
             />
             <button
               type="submit"
-              className="w-full px-2 h-8 bg-orange-400 hover:bg-orange-500 text-white rounded text-xs font-medium"
+              className="w-full max-w-[400px] px-2 h-8 bg-orange-400 hover:bg-orange-500 text-white rounded text-sm font-medium"
             >
               Créer
             </button>
