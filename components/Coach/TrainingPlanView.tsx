@@ -181,7 +181,7 @@ export default function TrainingPlanView({ athlete }: { athlete: AthleteExtended
           <div className="text-xs text-gray-600 mb-1">{date.getDate()}/{date.getMonth() + 1}</div>
           {session ? (
             <>
-              {/* Planifié - ne pas afficher si c'est une "Séance libre" complétée */}
+              {/* Planifié - ne pas afficher description si c'est une "Séance libre" complétée, mais garder le type */}
               {!(session.description === 'Séance libre' && session.is_completed) && (
                 <div
                   className="p-1 rounded mb-1 text-xs"
@@ -197,7 +197,7 @@ export default function TrainingPlanView({ athlete }: { athlete: AthleteExtended
                   }}
                 >
                   <div className="font-semibold">{session.session_type}</div>
-                  {session.description && (
+                  {session.description && session.description !== 'Séance libre' && (
                     <div className="text-xs truncate">{session.description}</div>
                   )}
                 </div>
@@ -303,7 +303,9 @@ export default function TrainingPlanView({ athlete }: { athlete: AthleteExtended
             }}
           >
             <div className="font-semibold text-xs">{session.session_type}</div>
-            <div className="text-xs mt-1">{session.description}</div>
+            <div className="text-xs mt-1">
+              {session.completed_notes || session.description}
+            </div>
           </div>
         ) : !raceOnDate ? (
           <div
