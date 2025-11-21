@@ -393,17 +393,17 @@ export default function TrainingPlanView({ athlete }: { athlete: AthleteExtended
           <h2 className="text-xl font-bold">📊 Historique</h2>
           <div className="flex gap-2">
             <button
-              onClick={() => setHistoryWeeksOffset(prev => prev + 2)}
+              onClick={() => setHistoryWeeksOffset(prev => prev + 1)}
               className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded text-sm"
             >
-              ← 2 semaines avant
+              ← Semaine précédente
             </button>
             {historyWeeksOffset > 0 && (
               <button
-                onClick={() => setHistoryWeeksOffset(prev => Math.max(0, prev - 2))}
+                onClick={() => setHistoryWeeksOffset(prev => Math.max(0, prev - 1))}
                 className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded text-sm"
               >
-                2 semaines après →
+                Semaine suivante →
               </button>
             )}
           </div>
