@@ -181,27 +181,25 @@ export default function TrainingPlanView({ athlete }: { athlete: AthleteExtended
           <div className="text-xs text-gray-600 mb-1">{date.getDate()}/{date.getMonth() + 1}</div>
           {session ? (
             <>
-              {/* Planifié - ne pas afficher description si c'est une "Séance libre" complétée, mais garder le type */}
-              {!(session.description === 'Séance libre' && session.is_completed) && (
-                <div
-                  className="p-1 rounded mb-1 text-xs"
-                  style={{
-                    backgroundColor: (
-                      session.session_type === 'endurance' ? '#FEF3C7' :
-                      session.session_type === 'resistance' ? '#FED7AA' :
-                      session.session_type === 'vitesse' ? '#FECACA' :
-                      session.session_type === 'vma' ? '#E9D5FF' :
-                      session.session_type === 'course' ? '#BFDBFE' :
-                      '#F3F4F6'
-                    )
-                  }}
-                >
-                  <div className="font-semibold">{session.session_type}</div>
-                  {session.description && session.description !== 'Séance libre' && (
-                    <div className="text-xs truncate">{session.description}</div>
-                  )}
-                </div>
-              )}
+              {/* Planifié */}
+              <div
+                className="p-1 rounded mb-1 text-xs"
+                style={{
+                  backgroundColor: (
+                    session.session_type === 'endurance' ? '#FEF3C7' :
+                    session.session_type === 'resistance' ? '#FED7AA' :
+                    session.session_type === 'vitesse' ? '#FECACA' :
+                    session.session_type === 'vma' ? '#E9D5FF' :
+                    session.session_type === 'course' ? '#BFDBFE' :
+                    '#F3F4F6'
+                  )
+                }}
+              >
+                <div className="font-semibold">{session.session_type}</div>
+                {session.description && session.description !== 'Séance libre' && (
+                  <div className="text-xs truncate">{session.description}</div>
+                )}
+              </div>
               {/* Réalisé */}
               {session.is_completed && (
                 <div className="bg-green-100 p-1 rounded text-xs border-2 border-green-400">
@@ -213,7 +211,7 @@ export default function TrainingPlanView({ athlete }: { athlete: AthleteExtended
                     <div className="text-xs">📏 {session.completed_distance_km} km</div>
                   )}
                   {session.completed_notes && (
-                    <div className="text-xs mt-1">{session.completed_notes}</div>
+                    <div className="text-xs truncate">{session.completed_notes}</div>
                   )}
                 </div>
               )}
@@ -304,7 +302,9 @@ export default function TrainingPlanView({ athlete }: { athlete: AthleteExtended
           >
             <div className="font-semibold text-xs">{session.session_type}</div>
             <div className="text-xs mt-1">
-              {session.completed_notes || session.description}
+              {session.description === 'Séance libre' && session.completed_notes 
+                ? session.completed_notes 
+                : session.description}
             </div>
           </div>
         ) : !raceOnDate ? (
