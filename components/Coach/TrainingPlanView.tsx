@@ -78,16 +78,17 @@ export default function TrainingPlanView({ athlete }: { athlete: AthleteExtended
   const [sessions, setSessions] = useState<{ [date: string]: TrainingSession }>({});
   const [loading, setLoading] = useState(true);
   const [editingCell, setEditingCell] = useState<string | null>(null);
+  const [historyWeeksOffset, setHistoryWeeksOffset] = useState(0);
 
   // Calculer les semaines à afficher
   const today = new Date();
   const currentMonday = getMonday(today);
   
-  // 4 dernières semaines (historique)
+  // 2 semaines passées (historique) + offset pour remonter dans le temps
   const pastWeeks: Date[] = [];
-  for (let i = 3; i >= 0; i--) {
+  for (let i = 1; i >= 0; i--) {
     const weekStart = new Date(currentMonday);
-    weekStart.setDate(currentMonday.getDate() - (i + 1) * 7);
+    weekStart.setDate(currentMonday.getDate() - ((i + 1 + historyWeeksOffset) * 7));
     pastWeeks.push(weekStart);
   }
   
@@ -125,7 +126,7 @@ export default function TrainingPlanView({ athlete }: { athlete: AthleteExtended
 
   useEffect(() => {
     fetchSessions();
-  }, [athlete.id]);
+  }, [athlete.id, historyWeeksOffset]);
 
   async function saveSession(date: string, sessionType: SessionType, description: string) {
     const session = sessions[date];
@@ -386,9 +387,27 @@ export default function TrainingPlanView({ athlete }: { athlete: AthleteExtended
         </div>
       </div>
 
-      {/* Historique : 4 dernières semaines */}
+      {/* Historique : 2 semaines passées */}
       <div className="mb-8">
-        <h2 className="text-xl font-bold mb-4">📊 Historique (4 dernières semaines)</h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-bold">📊 Historique</h2>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setHistoryWeeksOffset(prev => prev + 2)}
+              className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded text-sm"
+            >
+              ← 2 semaines avant
+            </button>
+            {historyWeeksOffset > 0 && (
+              <button
+                onClick={() => setHistoryWeeksOffset(prev => Math.max(0, prev - 2))}
+                className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded text-sm"
+              >
+                2 semaines après →
+              </button>
+            )}
+          </div>
+        </div>
         <div className="overflow-x-auto">
           {pastWeeks.map((weekStart, weekIdx) => {
             const weekDates = getWeekDates(weekStart);
