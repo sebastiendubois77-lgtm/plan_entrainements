@@ -21,9 +21,14 @@ export default function CoachDashboard() {
       .eq('role', 'athlete');
       
     if (!error && data) {
-      setAthletes(data);
-      if (data.length > 0 && !selectedAthleteId) {
-        setSelectedAthleteId(data[0].id);
+      const sorted = [...data].sort((a, b) => {
+        const an = (a.full_name || a.email || '').toLowerCase();
+        const bn = (b.full_name || b.email || '').toLowerCase();
+        return an.localeCompare(bn, 'fr', { ignorePunctuation: true });
+      });
+      setAthletes(sorted);
+      if (sorted.length > 0 && !selectedAthleteId) {
+        setSelectedAthleteId(sorted[0].id);
       }
     }
   }
