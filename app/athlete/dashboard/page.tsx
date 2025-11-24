@@ -315,6 +315,55 @@ export default function AthleteDashboard() {
     currentDate.setHours(0, 0, 0, 0);
     const isInPast = currentDate <= today;
 
+    // Affichage compact pour les semaines passées
+    if (isPast) {
+      return (
+        <td key={dateStr} className="border p-2 align-top">
+          <div className="text-xs text-gray-600 font-semibold mb-1">{date.getDate()}/{date.getMonth() + 1}</div>
+          
+          {/* Course */}
+          {raceOnDate && (
+            <div style={{ backgroundColor: '#BFDBFE' }} className="p-1 rounded mb-1 text-xs">
+              <div className="font-semibold">🏁 {raceOnDate.nom}</div>
+              <div>{raceOnDate.distance}</div>
+            </div>
+          )}
+          
+          {/* Planifié (compact) */}
+          {!raceOnDate && session && !session.session_type.includes('repos') && (
+            <div className="text-xs mb-1">
+              <span className="font-semibold">{session.session_type}</span>
+              {session.description && session.description !== 'Séance libre' && (
+                <div className="text-gray-600 truncate">{session.description}</div>
+              )}
+            </div>
+          )}
+          
+          {/* Réalisé (compact) */}
+          {session?.is_completed && (
+            <div className="bg-green-100 p-1 rounded text-xs">
+              <div className="font-semibold text-green-800">✓</div>
+              {session.completed_time_minutes && (
+                <div>⏱️ {session.completed_time_minutes}min</div>
+              )}
+              {session.completed_distance_km && (
+                <div>📏 {session.completed_distance_km}km</div>
+              )}
+              {session.completed_notes && (
+                <div className="text-gray-700 truncate mt-0.5" title={session.completed_notes}>{session.completed_notes}</div>
+              )}
+            </div>
+          )}
+          
+          {/* Pas de séance */}
+          {!raceOnDate && !session?.is_completed && (
+            <div className="text-xs text-gray-400">-</div>
+          )}
+        </td>
+      );
+    }
+
+    // Affichage normal pour les semaines futures
     return (
       <td key={dateStr} className="border p-2 align-top">
         <div className="text-xs text-gray-600 font-semibold mb-2">{date.getDate()}/{date.getMonth() + 1}</div>
