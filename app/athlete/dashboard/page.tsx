@@ -318,7 +318,7 @@ export default function AthleteDashboard() {
     // Affichage compact pour les semaines passées
     if (isPast) {
       return (
-        <td key={dateStr} className="border p-2 align-top">
+        <td key={dateStr} className="border p-1 align-top text-xs">
           <div className="text-xs text-gray-600 font-semibold mb-1">{date.getDate()}/{date.getMonth() + 1}</div>
           
           {/* Course */}
@@ -342,13 +342,7 @@ export default function AthleteDashboard() {
           {/* Réalisé (compact) */}
           {session?.is_completed && (
             <div className="bg-green-100 p-1 rounded text-xs">
-              <div className="font-semibold text-green-800">✓</div>
-              {session.completed_time_minutes && (
-                <div>⏱️ {session.completed_time_minutes}min</div>
-              )}
-              {session.completed_distance_km && (
-                <div>📏 {session.completed_distance_km}km</div>
-              )}
+              <div className="font-semibold text-green-800 truncate">✓ {session.completed_time_minutes ? `${session.completed_time_minutes}min` : ''} {session.completed_distance_km ? `${session.completed_distance_km}km` : ''}</div>
               {session.completed_notes && (
                 <div className="text-gray-700 truncate mt-0.5" title={session.completed_notes}>{session.completed_notes}</div>
               )}
@@ -365,16 +359,16 @@ export default function AthleteDashboard() {
 
     // Affichage normal pour les semaines futures
     return (
-      <td key={dateStr} className="border p-2 align-top">
-        <div className="text-xs text-gray-600 font-semibold mb-2">{date.getDate()}/{date.getMonth() + 1}</div>
+      <td key={dateStr} className="border p-1 align-top text-xs">
+        <div className="text-xs text-gray-600 font-semibold mb-1">{date.getDate()}/{date.getMonth() + 1}</div>
         
         {/* Course prévue (prioritaire) */}
         {raceOnDate && (
-          <div style={{ backgroundColor: '#BFDBFE' }} className="p-2 rounded mb-2 shadow-sm">
-            <div className="font-semibold text-sm">
+          <div style={{ backgroundColor: '#BFDBFE' }} className="p-1 rounded mb-1">
+            <div className="font-semibold text-xs truncate">
               🏁 {raceOnDate.nom}
             </div>
-            <div className="text-xs mt-1">{raceOnDate.distance}</div>
+            <div className="text-xs">{raceOnDate.distance}</div>
           </div>
         )}
         
@@ -384,7 +378,7 @@ export default function AthleteDashboard() {
           if (hideReposLabel) return null;
           return (
             <div
-              className="p-2 rounded mb-2 shadow-sm"
+              className="p-1 rounded mb-1"
               style={{
                 backgroundColor: (
                   session.session_type === 'endurance' ? '#FEF3C7' :
@@ -396,11 +390,11 @@ export default function AthleteDashboard() {
                 )
               }}
             >
-              <div className="font-semibold text-sm">
+              <div className="font-semibold text-xs truncate">
                 {session.session_type}
               </div>
               {session.description && (
-                <div className="text-xs mt-1">{session.description}</div>
+                <div className="text-xs truncate">{session.description}</div>
               )}
             </div>
           );
@@ -408,22 +402,16 @@ export default function AthleteDashboard() {
 
         {/* Affichage du réalisé ou bouton d'ajout */}
         {(session?.is_completed || session?.completed_notes) ? (
-          <div className="bg-green-100 border-2 border-green-400 p-2 rounded">
-            <div className="font-semibold text-xs text-green-800">
-              {isInPast ? '✓ Réalisé' : '📝 Note'}
+          <div className="bg-green-100 border border-green-400 p-1 rounded">
+            <div className="font-semibold text-xs text-green-800 truncate">
+              {isInPast ? '✓' : '📝'} {session.completed_time_minutes ? `${session.completed_time_minutes}min` : ''} {session.completed_distance_km ? `${session.completed_distance_km}km` : ''}
             </div>
-            {session.completed_time_minutes && (
-              <div className="text-xs">⏱️ {session.completed_time_minutes} min</div>
-            )}
-            {session.completed_distance_km && (
-              <div className="text-xs">📏 {session.completed_distance_km} km</div>
-            )}
             {session.completed_notes && (
-              <div className="text-xs mt-1 text-gray-700 line-clamp-2">{session.completed_notes}</div>
+              <div className="text-xs text-gray-700 truncate" title={session.completed_notes}>{session.completed_notes}</div>
             )}
             <button
               onClick={() => startEditing(dateStr, date)}
-              className="text-xs text-blue-600 hover:underline mt-1"
+              className="text-xs text-blue-600 hover:underline"
             >
               Modifier
             </button>
@@ -433,7 +421,7 @@ export default function AthleteDashboard() {
             onClick={() => startEditing(dateStr, date)}
             className="w-full text-xs bg-blue-500 text-white py-1 rounded hover:bg-blue-600"
           >
-            {isInPast ? '+ Ajouter ce qui a été fait' : '+ Ajouter une note'}
+            {isInPast ? '+ Fait' : '+ Note'}
           </button>
         )}
       </td>
@@ -522,16 +510,16 @@ export default function AthleteDashboard() {
                 <span className="flex items-center gap-3">{isPast ? '📊 ' : '📅 '}Semaine du {getWeekLabel(weekStart)}</span>
                 <span className="text-sm text-gray-600">⏱️ {totalTime.toFixed(0)} min • 📏 {totalDistance.toFixed(1)} km</span>
               </h3>
-              <div className="overflow-x-auto bg-white rounded-lg shadow">
-                <table className="w-full text-sm">
+              <div className="bg-white rounded-lg shadow">
+                <table className="w-full text-sm table-fixed">
                   <thead>
                     <tr>
                       {DAYS.map((day, i) => (
-                        <th key={i} className="border bg-gray-100 p-2 text-xs font-semibold w-[13%]">
-                          {day}
+                        <th key={i} className="border bg-gray-100 p-1 text-xs font-semibold">
+                          {day.substring(0, 3)}
                         </th>
                       ))}
-                      <th className="border bg-yellow-100 p-2 text-xs font-semibold w-[9%]">
+                      <th className="border bg-yellow-100 p-1 text-xs font-semibold w-16">
                         Total
                       </th>
                     </tr>
@@ -539,9 +527,9 @@ export default function AthleteDashboard() {
                   <tbody>
                     <tr>
                       {weekDates.map((date) => renderCell(date, isPast, getRaceOnDate(date)))}
-                      <td className="border bg-yellow-50 p-3 align-middle text-center">
-                        <div className="font-bold text-sm mb-1">⏱️ {totalTime.toFixed(0)} min</div>
-                        <div className="font-bold text-sm">📏 {totalDistance.toFixed(1)} km</div>
+                      <td className="border bg-yellow-50 p-1 align-middle text-center">
+                        <div className="font-bold text-xs">⏱️ {totalTime.toFixed(0)}</div>
+                        <div className="font-bold text-xs">📏 {totalDistance.toFixed(1)}</div>
                       </td>
                     </tr>
                   </tbody>
