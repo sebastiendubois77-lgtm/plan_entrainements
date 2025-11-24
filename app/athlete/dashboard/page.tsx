@@ -373,7 +373,7 @@ export default function AthleteDashboard() {
         {/* Course prévue (prioritaire) */}
         {raceOnDate && (
           <div style={{ backgroundColor: '#BFDBFE' }} className="p-1 rounded mb-1">
-            <div className="font-semibold text-xs truncate">
+            <div className="font-semibold text-xs">
               🏁 {raceOnDate.nom}
             </div>
             <div className="text-xs">{raceOnDate.distance}</div>
@@ -398,11 +398,11 @@ export default function AthleteDashboard() {
                 )
               }}
             >
-              <div className="font-semibold text-xs truncate">
+              <div className="font-semibold text-xs">
                 {session.session_type}
               </div>
               {session.description && (
-                <div className="text-xs truncate">{session.description}</div>
+                <div className="text-xs">{session.description}</div>
               )}
             </div>
           );

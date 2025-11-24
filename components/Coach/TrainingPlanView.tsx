@@ -295,8 +295,8 @@ export default function TrainingPlanView({ athlete }: { athlete: AthleteExtended
               )
             }}
           >
-            <div className="font-semibold text-xs truncate">{session.session_type}</div>
-            <div className="text-xs mt-1 truncate" title={session.description === 'Séance libre' && session.completed_notes ? session.completed_notes : session.description}>
+            <div className="font-semibold text-xs">{session.session_type}</div>
+            <div className="text-xs mt-1" title={session.description === 'Séance libre' && session.completed_notes ? session.completed_notes : session.description}>
               {session.description === 'Séance libre' && session.completed_notes 
                 ? session.completed_notes 
                 : session.description}
