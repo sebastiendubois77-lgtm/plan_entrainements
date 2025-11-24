@@ -178,8 +178,8 @@ export default function TrainingPlanView({ athlete }: { athlete: AthleteExtended
     if (isPast) {
       // Historique : afficher planifié + réalisé (non éditable)
       return (
-        <td key={dateStr} className="border p-2 align-top">
-          <div className="text-xs text-gray-600 mb-1">{date.getDate()}/{date.getMonth() + 1}</div>
+        <td key={dateStr} className="border p-1 align-top text-xs">
+          <div className="text-xs text-gray-600 mb-1 font-semibold">{date.getDate()}/{date.getMonth() + 1}</div>
           {session ? (
             <>
               {/* Planifié */}
@@ -196,34 +196,28 @@ export default function TrainingPlanView({ athlete }: { athlete: AthleteExtended
                   )
                 }}
               >
-                <div className="font-semibold">{session.session_type}</div>
+                <div className="font-semibold truncate">{session.session_type}</div>
                 {session.description && session.description !== 'Séance libre' && (
                   <div className="text-xs truncate">{session.description}</div>
                 )}
               </div>
               {/* Réalisé */}
               {session.is_completed && (
-                <div className="bg-green-100 p-1 rounded text-xs border-2 border-green-400">
-                  <div className="font-semibold">✓ Réalisé</div>
-                  {session.completed_time_minutes && (
-                    <div className="text-xs">⏱️ {session.completed_time_minutes} min</div>
-                  )}
-                  {session.completed_distance_km && (
-                    <div className="text-xs">📏 {session.completed_distance_km} km</div>
-                  )}
+                <div className="bg-green-100 p-1 rounded text-xs border border-green-400">
+                  <div className="font-semibold truncate">✓ {session.completed_time_minutes ? `${session.completed_time_minutes}min` : ''} {session.completed_distance_km ? `${session.completed_distance_km}km` : ''}</div>
                   {session.completed_notes && (
-                    <div className="text-xs truncate">{session.completed_notes}</div>
+                    <div className="text-xs truncate" title={session.completed_notes}>{session.completed_notes}</div>
                   )}
                 </div>
               )}
             </>
           ) : raceOnDate ? (
             <div style={{ backgroundColor: '#BFDBFE' }} className="p-1 rounded text-xs">
-              <div className="font-semibold">🏁 {raceOnDate.nom}</div>
+              <div className="font-semibold truncate">🏁 {raceOnDate.nom}</div>
               <div className="text-xs">{raceOnDate.distance}</div>
             </div>
           ) : (
-            <div className="text-xs text-gray-400">Repos</div>
+            <div className="text-xs text-gray-400">-</div>
           )}
         </td>
       );
@@ -234,12 +228,12 @@ export default function TrainingPlanView({ athlete }: { athlete: AthleteExtended
     const isAvailable = athlete.jours_disponibles ? athlete.jours_disponibles.includes(dayName) : false;
 
     return (
-      <td key={dateStr} className="border p-2 align-top">
-        <div className="text-xs text-gray-600 mb-1">{date.getDate()}/{date.getMonth() + 1}</div>
+      <td key={dateStr} className="border p-1 align-top text-xs">
+        <div className="text-xs text-gray-600 mb-1 font-semibold">{date.getDate()}/{date.getMonth() + 1}</div>
         
         {raceOnDate && (
-          <div style={{ backgroundColor: '#BFDBFE' }} className="p-2 rounded mb-1 text-xs font-semibold">
-            🏁 {raceOnDate.nom}
+          <div style={{ backgroundColor: '#BFDBFE' }} className="p-1 rounded mb-1 text-xs">
+            <div className="font-semibold truncate">🏁 {raceOnDate.nom}</div>
             <div>{raceOnDate.distance}</div>
           </div>
         )}
@@ -289,7 +283,7 @@ export default function TrainingPlanView({ athlete }: { athlete: AthleteExtended
         ) : !raceOnDate && session ? (
           <div
             onClick={() => setEditingCell(dateStr)}
-            className="p-2 rounded cursor-pointer hover:opacity-80 min-h-[60px]"
+            className="p-1 rounded cursor-pointer hover:opacity-80 min-h-[50px]"
             style={{
               backgroundColor: (
                 session.session_type === 'endurance' ? '#FEF3C7' :
@@ -301,8 +295,8 @@ export default function TrainingPlanView({ athlete }: { athlete: AthleteExtended
               )
             }}
           >
-            <div className="font-semibold text-xs">{session.session_type}</div>
-            <div className="text-xs mt-1">
+            <div className="font-semibold text-xs truncate">{session.session_type}</div>
+            <div className="text-xs mt-1 truncate" title={session.description === 'Séance libre' && session.completed_notes ? session.completed_notes : session.description}>
               {session.description === 'Séance libre' && session.completed_notes 
                 ? session.completed_notes 
                 : session.description}
@@ -317,10 +311,10 @@ export default function TrainingPlanView({ athlete }: { athlete: AthleteExtended
               }));
               setEditingCell(dateStr);
             }}
-            className={`p-2 rounded cursor-pointer hover:opacity-90 min-h-[60px] border-2 ${isAvailable ? 'border-green-300 bg-green-50' : 'border-dashed border-gray-300 bg-gray-50'} flex items-center justify-center`}
+            className={`p-1 rounded cursor-pointer hover:opacity-90 min-h-[50px] border ${isAvailable ? 'border-green-300 bg-green-50' : 'border-dashed border-gray-300 bg-gray-50'} flex items-center justify-center`}
             title={isAvailable ? 'Jour disponible (préféré)' : 'Jour non indiqué comme disponible'}
           >
-            <div className={`text-xs ${isAvailable ? 'text-green-800' : 'text-gray-400'}`}>{isAvailable ? '+ Ajouter séance (jour disponible)' : '+ Ajouter séance'}</div>
+            <div className={`text-xs text-center ${isAvailable ? 'text-green-800' : 'text-gray-400'}`}>{isAvailable ? '+ Séance' : '+ Ajouter'}</div>
           </div>
         ) : null}
       </td>
@@ -408,7 +402,7 @@ export default function TrainingPlanView({ athlete }: { athlete: AthleteExtended
             )}
           </div>
         </div>
-        <div className="overflow-x-auto">
+        <div>
           {pastWeeks.map((weekStart, weekIdx) => {
             const weekDates = getWeekDates(weekStart);
             return (
@@ -416,11 +410,11 @@ export default function TrainingPlanView({ athlete }: { athlete: AthleteExtended
                 <h3 className="font-semibold text-sm mb-2 bg-gray-200 px-2 py-1 rounded">
                   Semaine {getWeekLabel(weekStart)}
                 </h3>
-                <table className="w-full border-collapse text-sm">
+                <table className="w-full border-collapse text-sm table-fixed">
                   <thead>
                     <tr>
                       {DAYS.map((day, i) => (
-                        <th key={i} className="border bg-gray-100 p-2 text-xs">{day}</th>
+                        <th key={i} className="border bg-gray-100 p-1 text-xs">{day.substring(0, 3)}</th>
                       ))}
                     </tr>
                   </thead>
@@ -439,7 +433,7 @@ export default function TrainingPlanView({ athlete }: { athlete: AthleteExtended
       {/* Futur : 4 prochaines semaines */}
       <div>
         <h2 className="text-xl font-bold mb-4">📅 Planning (4 prochaines semaines)</h2>
-        <div className="overflow-x-auto">
+        <div>
           {futureWeeks.map((weekStart, weekIdx) => {
             const weekDates = getWeekDates(weekStart);
             return (
@@ -447,11 +441,11 @@ export default function TrainingPlanView({ athlete }: { athlete: AthleteExtended
                 <h3 className="font-semibold text-sm mb-2 bg-blue-100 px-2 py-1 rounded">
                   Semaine {getWeekLabel(weekStart)}
                 </h3>
-                <table className="w-full border-collapse text-sm">
+                <table className="w-full border-collapse text-sm table-fixed">
                   <thead>
                     <tr>
                       {DAYS.map((day, i) => (
-                        <th key={i} className="border bg-gray-100 p-2 text-xs">{day}</th>
+                        <th key={i} className="border bg-gray-100 p-1 text-xs">{day.substring(0, 3)}</th>
                       ))}
                     </tr>
                   </thead>
