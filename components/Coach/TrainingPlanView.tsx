@@ -178,7 +178,7 @@ export default function TrainingPlanView({ athlete }: { athlete: AthleteExtended
     if (isPast) {
       // Historique : afficher planifié + réalisé (non éditable)
       return (
-        <td key={dateStr} className="border p-1 align-top text-xs" style={{ minHeight: '150px' }}>
+        <td key={dateStr} className="border p-1 align-top text-xs">
           <div className="text-xs text-gray-600 mb-1 font-semibold">{date.getDate()}/{date.getMonth() + 1}</div>
           {session ? (
             <>
@@ -198,7 +198,7 @@ export default function TrainingPlanView({ athlete }: { athlete: AthleteExtended
               >
                 <div className="font-semibold">{session.session_type}</div>
                 {session.description && session.description !== 'Séance libre' && (
-                  <div className="text-xs" style={{ overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 4, WebkitBoxOrient: 'vertical' }}>{session.description}</div>
+                  <div className="text-xs">{session.description}</div>
                 )}
               </div>
               {/* Réalisé */}
@@ -206,7 +206,7 @@ export default function TrainingPlanView({ athlete }: { athlete: AthleteExtended
                 <div className="bg-green-100 p-1 rounded text-xs border border-green-400">
                   <div className="font-semibold">✓ {session.completed_time_minutes ? `${session.completed_time_minutes}min` : ''} {session.completed_distance_km ? `${session.completed_distance_km}km` : ''}</div>
                   {session.completed_notes && (
-                    <div className="text-xs" style={{ overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }} title={session.completed_notes}>{session.completed_notes}</div>
+                    <div className="text-xs">{session.completed_notes}</div>
                   )}
                 </div>
               )}

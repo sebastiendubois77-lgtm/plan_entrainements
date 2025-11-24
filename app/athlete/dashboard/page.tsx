@@ -318,7 +318,7 @@ export default function AthleteDashboard() {
     // Affichage compact pour les semaines passées
     if (isPast) {
       return (
-        <td key={dateStr} className="border p-1 align-top text-xs" style={{ minHeight: '120px' }}>
+        <td key={dateStr} className="border p-1 align-top text-xs">
           <div className="text-xs text-gray-600 font-semibold mb-1">{date.getDate()}/{date.getMonth() + 1}</div>
           
           {/* Course */}
@@ -334,7 +334,7 @@ export default function AthleteDashboard() {
             <div className="text-xs mb-1">
               <span className="font-semibold">{session.session_type}</span>
               {session.description && session.description !== 'Séance libre' && (
-                <div className="text-gray-600" style={{ overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>{session.description}</div>
+                <div className="text-gray-600">{session.description}</div>
               )}
             </div>
           )}
@@ -344,7 +344,7 @@ export default function AthleteDashboard() {
             <div className="bg-green-100 p-1 rounded text-xs mb-1">
               <div className="font-semibold text-green-800">✓ {session?.completed_time_minutes ? `${session.completed_time_minutes}min` : ''} {session?.completed_distance_km ? `${session.completed_distance_km}km` : ''}</div>
               {session?.completed_notes && (
-                <div className="text-gray-700 mt-0.5" style={{ overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }} title={session.completed_notes}>{session.completed_notes}</div>
+                <div className="text-gray-700 mt-0.5">{session.completed_notes}</div>
               )}
               <button
                 onClick={() => startEditing(dateStr, date)}
