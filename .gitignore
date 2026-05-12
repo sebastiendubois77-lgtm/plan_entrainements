@@ -11,3 +11,5 @@ yarn-error.log*
 .supabase/
 .DS_Store
 .vercel
+*.zip
+*.zip
