@@ -94,7 +94,7 @@ export default function TrainingPlanView({ athlete }: { athlete: AthleteExtended
   
   // 4 prochaines semaines (futur)
   const futureWeeks: Date[] = [];
-  for (let i = 1; i < 4; i++) {
+  for (let i = 0; i < 4; i++) {
     const weekStart = new Date(currentMonday);
     weekStart.setDate(currentMonday.getDate() + i * 7);
     futureWeeks.push(weekStart);
