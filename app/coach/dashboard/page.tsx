@@ -54,7 +54,8 @@ export default function CoachDashboard() {
       form.reset();
       fetchAthletes();
     } else {
-      alert(json.error || 'Erreur lors de la création');
+      const errorMessage = typeof json.error === 'object' ? JSON.stringify(json.error) : json.error;
+      alert(errorMessage || 'Erreur lors de la création');
     }
   }
 

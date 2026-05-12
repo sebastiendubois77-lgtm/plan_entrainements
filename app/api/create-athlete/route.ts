@@ -8,6 +8,22 @@ type Body = {
   password?: string;
 };
 
+function formatError(value: any) {
+  if (!value) return 'Unknown error';
+  if (typeof value === 'string') return value;
+  if (typeof value === 'object') {
+    if ('error' in value && value.error) return formatError(value.error);
+    if ('message' in value && value.message) return formatError(value.message);
+    if ('details' in value && value.details) return formatError(value.details);
+    try {
+      return JSON.stringify(value);
+    } catch {
+      return String(value);
+    }
+  }
+  return String(value);
+}
+
 export async function POST(req: Request) {
   try {
     const body: any = await req.json();
@@ -15,6 +31,9 @@ export async function POST(req: Request) {
     const name = body.name || body.full_name || body.fullName;
     const email = body.email || body.email_address;
     const coachId = body.coachId || body.coach_user_id || body.coach_userId || body.coachId;
+    if (!name || !email) {
+      return NextResponse.json({ error: 'Nom et email sont requis' }, { status: 400 });
+    }
     // Generate a temporary password that will be replaced when athlete sets their own
     let password = crypto.randomBytes(16).toString('hex');
 
@@ -33,7 +52,7 @@ export async function POST(req: Request) {
       body: JSON.stringify({ email, password, email_confirm: true })
     });
     const adminData = await createUserRes.json();
-    if (!createUserRes.ok) return NextResponse.json({ error: adminData }, { status: 500 });
+    if (!createUserRes.ok) return NextResponse.json({ error: formatError(adminData) }, { status: 500 });
     const userId = adminData.id;
 
     // Try to update existing profile with this email
@@ -49,7 +68,10 @@ export async function POST(req: Request) {
       body: JSON.stringify({ auth_uid: userId, full_name: name, role: 'athlete', coach_user_id: coachId || null })
     });
     const patched = await patchRes.json();
-    if (patchRes.ok && Array.isArray(patched) && patched.length > 0) {
+    if (!patchRes.ok) {
+      return NextResponse.json({ error: formatError(patched) }, { status: 500 });
+    }
+    if (Array.isArray(patched) && patched.length > 0) {
       // Create invitation token (valid for 7 days)
       const inviteToken = crypto.randomBytes(32).toString('hex');
       const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
@@ -89,7 +111,7 @@ export async function POST(req: Request) {
       body: JSON.stringify({ auth_uid: userId, full_name: name, email, role: 'athlete', coach_user_id: coachId || null })
     });
     const inserted = await insertRes.json();
-    if (!insertRes.ok) return NextResponse.json({ error: inserted }, { status: 500 });
+    if (!insertRes.ok) return NextResponse.json({ error: formatError(inserted) }, { status: 500 });
 
     // Create invitation token (valid for 7 days)
     const inviteToken = crypto.randomBytes(32).toString('hex');
